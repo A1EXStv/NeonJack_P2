@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\PermissionController;
+use App\Http\Controllers\Api\PostController;
 
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\RoleController;
@@ -28,6 +29,7 @@ Route::group(['middleware' => 'auth:sanctum'], function() {
     Route::get('/user/signin', [ProfileController::class, 'user']);
     Route::put('/user', [ProfileController::class, 'update']);
 
+
     Route::get('abilities', function(Request $request) {
         return $request->user()->roles()->with('permissions')
             ->get()
@@ -39,6 +41,13 @@ Route::group(['middleware' => 'auth:sanctum'], function() {
             ->toArray();
     });
 });
-
 Route::get('category-list', [CategoryController::class, 'getList']);
+
+
+
+Route::apiResource('posts', PostController::class);
+// Route::get('/posts', [PostController::class, 'index']);
+// Route::get('/posts/{post}', [PostController::class, 'show']);
+// Route::delete('/posts/{post}', [PostController::class, 'destroy']);
+// Route::post('/posts/{post}', [PostController::class, 'store']);
 

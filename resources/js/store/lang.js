@@ -13,5 +13,3 @@ export const
 
     return { locale, locales, setLocale};
 }, {persist: true});
-
-
