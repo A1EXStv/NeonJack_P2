@@ -17,3 +17,4 @@ package-lock.json
 composer.lock
 yarn.lock
 /storage/media-library/temp
+.env
