@@ -1,0 +1,7 @@
+INSERT INTO skins (nombre, precio, activo)
+VALUES
+('Skin Dragón', 9.99, true),
+('Skin Fénix', 7.50, true),
+('Skin Sombra', 5.00, false),
+('Skin Titán', 12.00, true),
+('Skin Espectral', 6.75, true);
