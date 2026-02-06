@@ -1,0 +1,56 @@
+1. Descripción general del proyecto
+    Nombre del proyecto: NeonJack
+    Tipo de aplicación: WebApp
+    Tecnologías: Laravel 10 + Vue 3 (Composition API), Bootstrap 5, MySQL, Axios, Git
+
+2. Objetivo del proyecto
+    El objetivo del proyecto es desarrollar una aplicación web interactiva que permita:
+    Jugar partidas de Blackjack en tiempo real
+    Gestionar usuarios, partidas y apuestas
+    Implementar un sistema de recompensas (skins y logros)
+    Aplicar roles y permisos
+    Practicar el uso de Laravel, Vue, Eloquent, Axios y buenas prácticas de desarrollo
+
+3. Funcionalidades principales
+3.1 Gestión de usuarios
+    Registro de usuarios
+    Inicio de sesión (autenticación)
+    Cierre de sesión
+    Gestión de perfil
+    Control de permisos y roles
+
+3.2 Sistema de partidas
+    Creación de partidas
+    Asociación de usuarios a partidas
+    Gestión del estado de la partida (en curso, finalizada)
+    Registro de manos del jugador y del dealer
+    Cálculo del resultado de la partida
+
+3.3 Sistema de apuestas
+    Apuesta inicial por partida
+    Cálculo del balance final
+    Actualización automática de la cartera del usuario
+
+3.4 Economía virtual
+    Cartera de usuario
+    Registro de transacciones (apuestas, premios, compras)
+    Historial de movimientos
+
+3.5 Skins
+    Visualización de skins disponibles
+    Compra de skins
+    Equipar skin activa
+    Relación N:M entre usuarios y skins
+
+3.6 Logros
+    Desbloqueo de logros automáticos
+    Asociación de logros a usuarios
+    Visualización de logros obtenidos
+
+3.7 Sistema de logs
+    Registro de acciones importantes del usuario
+    Auditoría de eventos clave
+
+3.8 Búsqueda y filtrado
+    Filtrado de usuarios y partidas con Eloquent
+    Búsqueda dinámica con Vue + Axios
