@@ -19,9 +19,6 @@ return new class extends Migration
         });
     }
 
-    /**
-     * Revierte las migraciones.
-     */
     public function down(): void
     {
         Schema::dropIfExists('skin_user');
