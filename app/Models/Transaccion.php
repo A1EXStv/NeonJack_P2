@@ -5,18 +5,20 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Skin extends Model
+class Transaccion extends Model
 {
     use HasFactory;
 
+    protected $table = 'transacciones';
+
     protected $fillable = [
-        'name',
-        'price',
-        'is_active',
+        'user_id',
+        'type',
+        'amount',
     ];
 
-    public function users()
+    public function user()
     {
-        return $this->belongsToMany(User::class, 'skin_user');
+        return $this->belongsTo(User::class);
     }
 }

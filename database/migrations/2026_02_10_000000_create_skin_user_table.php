@@ -11,11 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('skins', function (Blueprint $table) {
+        Schema::create('skin_user', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->decimal('price', 10, 2);
-            $table->boolean('is_active')->default(true);
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('skin_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -25,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('skins');
+        Schema::dropIfExists('skin_user');
     }
 };

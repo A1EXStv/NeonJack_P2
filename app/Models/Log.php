@@ -5,18 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Skin extends Model
+class Log extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'name',
-        'price',
-        'is_active',
+        'user_id',
+        'action',
+        'description',
     ];
 
-    public function users()
+    public function user()
     {
-        return $this->belongsToMany(User::class, 'skin_user');
+        return $this->belongsTo(User::class);
     }
 }

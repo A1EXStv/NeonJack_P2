@@ -28,8 +28,37 @@ class User extends Authenticatable implements HasMedia
         'email',
         'password',
         'surname1',
-        'surname2'
+        'surname2',
+        'wallet',
+        'active_skin_id',
     ];
+
+    public function skins()
+    {
+        return $this->belongsToMany(Skin::class, 'skin_user');
+    }
+
+    public function activeSkin()
+    {
+        return $this->belongsTo(Skin::class, 'active_skin_id');
+    }
+
+    public function logros()
+    {
+        return $this->belongsToMany(Logro::class, 'logro_user')
+                    ->withPivot('unlocked_at')
+                    ->withTimestamps();
+    }
+
+    public function logs()
+    {
+        return $this->hasMany(Log::class);
+    }
+
+    public function transacciones()
+    {
+        return $this->hasMany(Transaccion::class);
+    }
 
     /**
      * The attributes that should be hidden for serialization.
