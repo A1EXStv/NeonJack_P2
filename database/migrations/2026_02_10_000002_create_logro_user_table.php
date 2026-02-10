@@ -6,9 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Ejecuta las migraciones.
-     */
     public function up(): void
     {
         Schema::create('logro_user', function (Blueprint $table) {
@@ -20,9 +17,6 @@ return new class extends Migration
         });
     }
 
-    /**
-     * Revierte las migraciones.
-     */
     public function down(): void
     {
         Schema::dropIfExists('logro_user');
