@@ -68,7 +68,6 @@ class UserController extends Controller
         $role = Role::find($request->role_id);
         $user = new User();
         $user->name = $request->name;
-        $user->email = $request->email;
         $user->surname1 = $request->surname1;
         $user->surname2 = $request->surname2;
 
@@ -81,7 +80,6 @@ class UserController extends Controller
             return new UserResource($user);
         }
     }
-
     /**
      * Display the specified resource.
      *
