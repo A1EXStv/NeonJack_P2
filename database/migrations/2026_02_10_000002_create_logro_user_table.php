@@ -8,17 +8,17 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('logro_user', function (Blueprint $table) {
+        Schema::create('logro_usuario', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('logro_id')->constrained()->onDelete('cascade');
-            $table->timestamp('unlocked_at')->useCurrent();
+            $table->timestamp('fecha_desbloqueo')->useCurrent();
             $table->timestamps();
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('logro_user');
+        Schema::dropIfExists('logro_usuario');
     }
 };

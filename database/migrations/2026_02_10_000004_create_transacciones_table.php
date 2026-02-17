@@ -12,8 +12,8 @@ return new class extends Migration
         Schema::create('transacciones', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->string('type'); // deposit, withdrawal, bet, win
-            $table->decimal('amount', 10, 2);
+            $table->string('tipo'); // deposit, withdrawal, bet, win
+            $table->decimal('cantidad', 10, 2);
             $table->timestamps();
         });
     }
