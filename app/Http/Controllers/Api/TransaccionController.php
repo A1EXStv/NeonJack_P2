@@ -1,9 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
+use App\http\Controllers\Controller;
 use App\Models\Transaccion;
 use Illuminate\Http\Request;
+use App\Http\Requests\StoreTransaccionRequest;
+
 
 class TransaccionController extends Controller
 {
@@ -19,17 +22,11 @@ class TransaccionController extends Controller
     /**
      * Almacena un recurso recién creado.
      */
-    public function store(Request $request)
+    public function store(StoreTransaccionRequest $request)
     {
-        $request->validate([
-            'user_id' => 'required|exists:users,id',
-            'type' => 'required|string|max:50',
-            'amount' => 'required|numeric',
-        ]);
-
-        $transaccion = Transaccion::create($request->all());
-
-        return response()->json($transaccion, 201);
+        $data = $request->validated();
+        $transaccion = Transaccion::create($data);
+        return $transaccion;
     }
 
     /**
@@ -37,6 +34,15 @@ class TransaccionController extends Controller
      */
     public function show(Transaccion $transaccion)
     {
-        return response()->json($transaccion->load('user'));
+        return  $transaccion;
+    }
+
+    /*
+    * Elimina eñ recursp
+     */
+    public function destroy(Transaccion $transaccion)
+    {
+        $transaccion->delete();
+        return  $transaccion;
     }
 }

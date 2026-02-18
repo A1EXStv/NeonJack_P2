@@ -10,9 +10,9 @@ class Skin extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name',
-        'price',
-        'is_active',
+        'nombre',
+        'precio',
+        'activo',
     ];
 
     public function users()

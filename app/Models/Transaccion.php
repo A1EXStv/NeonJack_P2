@@ -13,8 +13,8 @@ class Transaccion extends Model
 
     protected $fillable = [
         'user_id',
-        'type',
-        'amount',
+        'tipo',
+        'cantidad',
     ];
 
     public function user()
