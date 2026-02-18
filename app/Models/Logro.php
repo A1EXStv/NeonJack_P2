@@ -10,9 +10,9 @@ class Logro extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name',
-        'description',
-        'is_active',
+        'nombre',
+        'descripcion',
+        'activo',
     ];
 
     public function users()
