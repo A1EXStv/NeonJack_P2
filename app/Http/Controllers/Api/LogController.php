@@ -23,8 +23,8 @@ class LogController extends Controller
     {
         $request->validate([
             'user_id' => 'required|exists:users,id',
-            'action' => 'required|string|max:255',
-            'description' => 'nullable|string',
+            'accion' => 'required|string|max:255',
+            'descripcion' => 'nullable|string',
         ]);
 
         $log = Log::create($request->all());

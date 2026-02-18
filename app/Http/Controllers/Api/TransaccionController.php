@@ -23,8 +23,8 @@ class TransaccionController extends Controller
     {
         $request->validate([
             'user_id' => 'required|exists:users,id',
-            'type' => 'required|string|max:50',
-            'amount' => 'required|numeric',
+            'tipo' => 'required|string|max:50',
+            'cantidad' => 'required|numeric',
         ]);
 
         $transaccion = Transaccion::create($request->all());

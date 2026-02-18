@@ -12,7 +12,7 @@ class SkinController extends Controller
      */
     public function index()
     {
-        $skins = Skin::where('is_active', true)->get();
+        $skins = Skin::where('activo', true)->get();
         return response()->json($skins);
     }
 
@@ -22,14 +22,14 @@ class SkinController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
-            'price' => 'required|numeric',
+            'nombre' => 'required|string|max:255',
+            'precio' => 'required|numeric',
         ]);
 
         $skin = Skin::create([
-            'name' => $request->name,
-            'price' => $request->price,
-            'is_active' => true,
+            'nombre' => $request->name,
+            'precio' => $request->price,
+            'activo' => true,
         ]);
 
         return response()->json($skin, 201);
@@ -49,9 +49,9 @@ class SkinController extends Controller
     public function update(Request $request, Skin $skin)
     {
         $request->validate([
-            'name' => 'string|max:255',
-            'price' => 'numeric',
-            'is_active' => 'boolean',
+            'nombre' => 'string|max:255',
+            'precio' => 'numeric',
+            'activo' => 'boolean',
         ]);
 
         $skin->update($request->all());
