@@ -1,9 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
+use App\http\Controllers\Controller;
 use App\Models\Skin;
 use Illuminate\Http\Request;
+use App\Http\Requests\StoreSkinRequest;
+use App\Http\Requests\UpdateSkinRequest;
+
 
 class SkinController extends Controller
 {
@@ -12,27 +16,18 @@ class SkinController extends Controller
      */
     public function index()
     {
-        $skins = Skin::where('activo', true)->get();
+        $skins = Skin->get();
         return response()->json($skins);
     }
 
     /**
      * Almacena un recurso recién creado.
      */
-    public function store(Request $request)
+    public function store(StoreSkinRequest $request)
     {
-        $request->validate([
-            'nombre' => 'required|string|max:255',
-            'precio' => 'required|numeric',
-        ]);
-
-        $skin = Skin::create([
-            'nombre' => $request->name,
-            'precio' => $request->price,
-            'activo' => true,
-        ]);
-
-        return response()->json($skin, 201);
+        $data = $request->validated();
+        $skin = Skin::create($data);
+        return $skin;
     }
 
     /**
@@ -40,23 +35,29 @@ class SkinController extends Controller
      */
     public function show(Skin $skin)
     {
-        return response()->json($skin);
+        return $skin;
     }
 
     /**
      * Actualiza el recurso especificado.
      */
-    public function update(Request $request, Skin $skin)
+    public function update(UpdateSkinRequest $request, Skin $skin)
     {
-        $request->validate([
-            'nombre' => 'string|max:255',
-            'precio' => 'numeric',
-            'activo' => 'boolean',
-        ]);
+        $skin->nombre = $request->nombre ?? $skin->nombre;
+        $skin->precio = $request->precio ?? $skin->precio;
+        
+        if ($request->has('activo')) {
+            $skin->activo = $request->activo;
+        }
 
-        $skin->update($request->all());
+        if ($skin->save()) {
+            return response()->json([
+                'message' => 'Skin actualizada correctamente',
+                'data' => $skin
+            ], 200);
+        }
 
-        return response()->json($skin);
+        return response()->json(['error' => 'No se pudo actualizar la skin'], 500);
     }
 
     /**

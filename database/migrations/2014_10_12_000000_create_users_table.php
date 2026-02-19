@@ -23,7 +23,6 @@ return new class extends Migration
             $table->timestamp('verificar_correo')->nullable();
             $table->string('contrasena');
             $table->decimal('cartera', 10, 2);
-            $table->foreignId('skin_id')->nullable()->constrained('skins')->onDelete('set null');
             $table->rememberToken();
             $table->timestamps();
         });
