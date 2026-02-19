@@ -13,10 +13,9 @@ return new class extends Migration
     {
         Schema::create('manos', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('sala_id')->constrained()->onDelete('cascade');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->int('creditos_jugados');
-            $table->int('creditos_ganados');
+            $table->integer('creditos_jugados');
+            $table->integer('creditos_ganados');
             $table->timestamps();
         });
     }
