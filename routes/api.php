@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\PermissionController;
 use App\Http\Controllers\Api\PostController;
 
 use App\Http\Controllers\Api\TransaccionController;
+use App\Http\Controllers\Api\SkinController;
 
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\RoleController;
@@ -62,3 +63,9 @@ Route::delete('/transacciones/{transaccion}', [TransaccionController::class, 'de
 Route::post('/transacciones', [TransaccionController::class, 'store']);
 
 // Route::apiResource('transacciones', TransaccionController::class);
+
+Route::get('/skins', [SkinController::class, 'index']);
+Route::get('/skins/{skin}', [SkinController::class, 'show']);
+Route::delete('/skins/{skin}', [SkinController::class, 'destroy']);
+Route::post('/skins', [SkinController::class, 'store']);
+Route::post('/skins', [SkinController::class, 'update']);

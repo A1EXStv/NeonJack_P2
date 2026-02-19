@@ -10,11 +10,6 @@ class Transaccion extends Model{
     protected $table = 'transacciones';
     protected $fillable = ['user_id', 'tipo', 'cantidad'];
 
-    protected $fillable = [
-        'user_id',
-        'tipo',
-        'cantidad',
-    ];
 
     public function user()
     {
