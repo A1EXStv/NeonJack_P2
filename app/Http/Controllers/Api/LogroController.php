@@ -12,7 +12,7 @@ class LogroController extends Controller
      */
     public function index()
     {
-        $logros = Logro::where('is_active', true)->get();
+        $logros = Logro::where('activo', true)->get();
         return response()->json($logros);
     }
 
@@ -22,14 +22,14 @@ class LogroController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
+            'nombre' => 'required|string|max:255',
+            'descripcion' => 'nullable|string',
         ]);
 
         $logro = Logro::create([
-            'name' => $request->name,
-            'description' => $request->description,
-            'is_active' => true,
+            'nombre' => $request->name,
+            'descripcion' => $request->description,
+            'activo' => true,
         ]);
 
         return response()->json($logro, 201);
@@ -49,9 +49,9 @@ class LogroController extends Controller
     public function update(Request $request, Logro $logro)
     {
         $request->validate([
-            'name' => 'string|max:255',
-            'description' => 'nullable|string',
-            'is_active' => 'boolean',
+            'nombre' => 'string|max:255',
+            'descripcion' => 'nullable|string',
+            'activo' => 'boolean',
         ]);
 
         $logro->update($request->all());
