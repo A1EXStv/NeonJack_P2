@@ -71,14 +71,14 @@ Route::post('/skins', [SkinController::class, 'store']);
 Route::post('/skins', [SkinController::class, 'update']);
  
 
-Route::get(['/salas'], [App\Http\Controllers\Api\SalaController::class, 'index']);
-Route::get('/salas/{sala}', [App\Http\Controllers\Api\SalaController::class, 'show']);
-Route::delete('/salas/{sala}', [App\Http\Controllers\Api\SalaController::class, 'destroy']);
-Route::post('/salas', [App\Http\Controllers\Api\SalaController::class, 'store']);
-Route::post('/salas/{sala}', [App\Http\Controllers\Api\SalaController::class, 'update']);
+Route::get('/skins', [SalaController::class, 'index']);
+Route::get('/skins/{skin}', [SalaController::class, 'show']);
+Route::delete('/skins/{skin}', [SalaController::class, 'destroy']);
+Route::post('/skins', [SalaController::class, 'store']);
+Route::post('/skins', [SalaController::class, 'update']);
 
-Route::get(['/manos'], [App\Http\Controllers\Api\ManoController::class, 'index']);
-Route::get('/manos/{mano}', [App\Http\Controllers\Api\ManoController::class, 'show']);
-Route::delete('/manos/{mano}', [App\Http\Controllers\Api\ManoController::class, 'destroy']);
-Route::post('/manos', [App\Http\Controllers\Api\ManoController::class, 'store']);
-Route::post('/manos/{mano}', [App\Http\Controllers\Api\ManoController::class, 'update']);
+Route::get('/manos', [ManoController::class, 'index']);
+Route::get('/manos/{mano}', [ManoController::class, 'show']);
+Route::delete('/manos/{mano}', [ManoController::class, 'destroy']);
+Route::post('/manos', [ManoController::class, 'store']);
+Route::post('/manos', [ManoController::class, 'update']);
