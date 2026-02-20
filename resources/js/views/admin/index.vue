@@ -26,7 +26,7 @@
                             <i class="pi pi-users"></i>
                         </div>
                         <div class="stat-card-info">
-                            <p class="stat-card-label">Usuarios</p>
+                            <p class="stat-card-label"></p>
                             <p class="stat-card-value">{{ stats.users || 0 }}</p>
                         </div>
                     </div>

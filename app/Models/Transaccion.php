@@ -9,7 +9,9 @@ class Transaccion extends Model{
 
     protected $table = 'transacciones';
     protected $fillable = ['user_id', 'tipo', 'cantidad'];
-    
+
+  
+
     public function user()
     {
         return $this->belongsTo(User::class);
