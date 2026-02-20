@@ -33,6 +33,10 @@ class User extends Authenticatable implements HasMedia
         'active_skin_id',
     ];
 
+    public function mano()
+    {
+        return $this->belongsTo(Mano::class);
+    }
     public function skins()
     {
         return $this->belongsToMany(Skin::class, 'skin_user');
