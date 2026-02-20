@@ -69,3 +69,10 @@ Route::get('/skins/{skin}', [SkinController::class, 'show']);
 Route::delete('/skins/{skin}', [SkinController::class, 'destroy']);
 Route::post('/skins', [SkinController::class, 'store']);
 Route::post('/skins', [SkinController::class, 'update']);
+
+
+Route::get(['/salas'], [App\Http\Controllers\Api\SalaController::class, 'index']);
+Route::get('/salas/{sala}', [App\Http\Controllers\Api\SalaController::class, 'show']);
+Route::delete('/salas/{sala}', [App\Http\Controllers\Api\SalaController::class, 'destroy']);
+Route::post('/salas', [App\Http\Controllers\Api\SalaController::class, 'store']);
+Route::post('/salas/{sala}', [App\Http\Controllers\Api\SalaController::class, 'update']);
