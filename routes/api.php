@@ -6,6 +6,8 @@ use App\Http\Controllers\Api\PostController;
 
 use App\Http\Controllers\Api\TransaccionController;
 use App\Http\Controllers\Api\SkinController;
+use App\Http\Controllers\Api\SalaController;
+use App\Http\Controllers\Api\ManoController;
 
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\RoleController;
