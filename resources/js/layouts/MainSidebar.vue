@@ -128,7 +128,8 @@ const menuModel = computed(() => {
         {
             label: 'Contenido',
             items: [
-                { label: 'Categorías', icon: 'pi pi-tags', route: '/admin/categories', permission: 'category-list' }
+                { label: 'Categorías', icon: 'pi pi-tags', route: '/admin/categories', permission: 'category-list' },
+                { label: 'Transacciones', icon: 'pi pi-exchange', route:'/admin/transacciones'}
             ]
         }
     ];
