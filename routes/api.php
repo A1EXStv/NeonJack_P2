@@ -6,6 +6,8 @@ use App\Http\Controllers\Api\PostController;
 
 use App\Http\Controllers\Api\TransaccionController;
 use App\Http\Controllers\Api\SkinController;
+use App\Http\Controllers\Api\LogroController;
+use App\Http\Controllers\Api\LogController;
 use App\Http\Controllers\Api\SalaController;
 use App\Http\Controllers\Api\ManoController;
 
@@ -70,14 +72,30 @@ Route::get('/skins', [SkinController::class, 'index']);
 Route::get('/skins/{skin}', [SkinController::class, 'show']);
 Route::delete('/skins/{skin}', [SkinController::class, 'destroy']);
 Route::post('/skins', [SkinController::class, 'store']);
+Route::post('/skins/{skin}', [SkinController::class, 'update']);
+
+// LOGROS
+
+Route::get('/logros', [LogroController::class, 'index']);
+Route::get('/logros/{logro}', [LogroController::class, 'show']);
+Route::delete('/logros/{logro}', [LogroController::class, 'destroy']);
+Route::post('/logros', [LogroController::class, 'store']);
+Route::post('/logros/{logro}', [LogroController::class, 'update']);
+
+//LOGS
+
+Route::get('/logs', [LogController::class, 'index']);
+Route::get('/logs/{log}', [LogController::class, 'show']);
+Route::delete('/logs/{log}', [LogController::class, 'destroy']);
+Route::post('/logs', [LogController::class, 'store']);
 Route::post('/skins', [SkinController::class, 'update']);
  
 
-Route::get('/skins', [SalaController::class, 'index']);
-Route::get('/skins/{skin}', [SalaController::class, 'show']);
-Route::delete('/skins/{skin}', [SalaController::class, 'destroy']);
-Route::post('/skins', [SalaController::class, 'store']);
-Route::post('/skins', [SalaController::class, 'update']);
+Route::get('/salas', [SalaController::class, 'index']);
+Route::get('/salas/{sala}', [SalaController::class, 'show']);
+Route::delete('/salas/{sala}', [SalaController::class, 'destroy']);
+Route::post('/salas', [SalaController::class, 'store']);
+Route::post('/salas', [SalaController::class, 'update']);
 
 Route::get('/manos', [ManoController::class, 'index']);
 Route::get('/manos/{mano}', [ManoController::class, 'show']);
