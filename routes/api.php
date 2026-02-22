@@ -6,6 +6,8 @@ use App\Http\Controllers\Api\PostController;
 
 use App\Http\Controllers\Api\TransaccionController;
 use App\Http\Controllers\Api\SkinController;
+use App\Http\Controllers\Api\LogroController;
+use App\Http\Controllers\Api\LogController;
 
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\RoleController;
@@ -68,4 +70,19 @@ Route::get('/skins', [SkinController::class, 'index']);
 Route::get('/skins/{skin}', [SkinController::class, 'show']);
 Route::delete('/skins/{skin}', [SkinController::class, 'destroy']);
 Route::post('/skins', [SkinController::class, 'store']);
-Route::post('/skins', [SkinController::class, 'update']);
+Route::post('/skins/{skin}', [SkinController::class, 'update']);
+
+// LOGROS
+
+Route::get('/logros', [LogroController::class, 'index']);
+Route::get('/logros/{logro}', [LogroController::class, 'show']);
+Route::delete('/logros/{logro}', [LogroController::class, 'destroy']);
+Route::post('/logros', [LogroController::class, 'store']);
+Route::post('/logros/{logro}', [LogroController::class, 'update']);
+
+//LOGS
+
+Route::get('/logs', [LogController::class, 'index']);
+Route::get('/logs/{log}', [LogController::class, 'show']);
+Route::delete('/logs/{log}', [LogController::class, 'destroy']);
+Route::post('/logs', [LogController::class, 'store']);
