@@ -1,9 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
+use App\http\Controllers\Controller;
 use App\Models\Logro;
 use Illuminate\Http\Request;
+use App\Http\Requests\StoreLogroRequest;
+use App\Http\Requests\UpdateLogroRequest;
 
 class LogroController extends Controller
 {
@@ -12,27 +15,18 @@ class LogroController extends Controller
      */
     public function index()
     {
-        $logros = Logro::where('activo', true)->get();
+        $logros = Logro->get();
         return response()->json($logros);
     }
 
     /**
      * Almacena un recurso recién creado.
      */
-    public function store(Request $request)
+    public function store(StoreLogrosRequest $request)
     {
-        $request->validate([
-            'nombre' => 'required|string|max:255',
-            'descripcion' => 'nullable|string',
-        ]);
-
-        $logro = Logro::create([
-            'nombre' => $request->name,
-            'descripcion' => $request->description,
-            'activo' => true,
-        ]);
-
-        return response()->json($logro, 201);
+        $data = $request->validated();
+        $logro = Logro::create($data);
+        return $logro;
     }
 
     /**
@@ -46,17 +40,22 @@ class LogroController extends Controller
     /**
      * Actualiza el recurso especificado.
      */
-    public function update(Request $request, Logro $logro)
+    public function update(UpdateLogroRequest $request, Logro $logro)
     {
-        $request->validate([
-            'nombre' => 'string|max:255',
-            'descripcion' => 'nullable|string',
-            'activo' => 'boolean',
-        ]);
+        $logro->nombre = $request->nombre ?? $logro->nombre;
+        $logro->descripcion = $request->descripcion ?? $logro->descripcion;
+        
+        if($request->has('activo')){
+            $logro->activo = $request->activo;
+        }
 
-        $logro->update($request->all());
-
-        return response()->json($logro);
+        if($logro->save()){
+            return response()->json([
+                'message' => 'Logro actualizado correctamente',
+                'data' => $logro
+            ], 200);
+        }
+        return response()->json(['error' => 'No se pudo actualizar el logro.']);
     }
 
     /**

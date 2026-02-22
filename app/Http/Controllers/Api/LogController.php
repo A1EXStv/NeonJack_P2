@@ -1,9 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
+use App\http\Controllers\Controller;
 use App\Models\Log;
 use Illuminate\Http\Request;
+use App\Http\Requests\StoreLogRequest;
 
 class LogController extends Controller
 {
@@ -12,23 +14,17 @@ class LogController extends Controller
      */
     public function index()
     {
-        $logs = Log::with('user')->latest()->get();
+        $logs = Log::get();
         return response()->json($logs);
     }
 
     /**
      * Almacena un recurso recién creado.
      */
-    public function store(Request $request)
+    public function store(StoreLogRequest $request)
     {
-        $request->validate([
-            'user_id' => 'required|exists:users,id',
-            'accion' => 'required|string|max:255',
-            'descripcion' => 'nullable|string',
-        ]);
-
-        $log = Log::create($request->all());
-
+        $data = $request->validated();
+        $log = Log::create($data);
         return response()->json($log, 201);
     }
 
@@ -38,5 +34,13 @@ class LogController extends Controller
     public function show(Log $log)
     {
         return response()->json($log->load('user'));
+    }
+
+    /**
+     * Elimina el recurso especificado.
+     */
+    public function destroy(Log $log){
+        $log->delete();
+        return response()->json(null, 204);
     }
 }
