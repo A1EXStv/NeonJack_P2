@@ -8,6 +8,8 @@ use App\Http\Controllers\Api\TransaccionController;
 use App\Http\Controllers\Api\SkinController;
 use App\Http\Controllers\Api\LogroController;
 use App\Http\Controllers\Api\LogController;
+use App\Http\Controllers\Api\SalaController;
+use App\Http\Controllers\Api\ManoController;
 
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\RoleController;
@@ -86,3 +88,17 @@ Route::get('/logs', [LogController::class, 'index']);
 Route::get('/logs/{log}', [LogController::class, 'show']);
 Route::delete('/logs/{log}', [LogController::class, 'destroy']);
 Route::post('/logs', [LogController::class, 'store']);
+Route::post('/skins', [SkinController::class, 'update']);
+ 
+
+Route::get('/salas', [SalaController::class, 'index']);
+Route::get('/salas/{sala}', [SalaController::class, 'show']);
+Route::delete('/salas/{sala}', [SalaController::class, 'destroy']);
+Route::post('/salas', [SalaController::class, 'store']);
+Route::post('/salas', [SalaController::class, 'update']);
+
+Route::get('/manos', [ManoController::class, 'index']);
+Route::get('/manos/{mano}', [ManoController::class, 'show']);
+Route::delete('/manos/{mano}', [ManoController::class, 'destroy']);
+Route::post('/manos', [ManoController::class, 'store']);
+Route::post('/manos', [ManoController::class, 'update']);
