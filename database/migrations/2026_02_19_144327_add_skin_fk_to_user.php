@@ -10,8 +10,8 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
         
-            if (!Schema::hasColumn('users', 'skin_activa')) {
-                $table->foreignId('skin_activa')->nullable()->constrained('skins')->default(1);
+            if (!Schema::hasColumn('users', 'active_skin')) {
+                $table->foreignId('active_skin')->nullable()->constrained('skins')->default(1);
             }
         });
     }
@@ -20,9 +20,9 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            if (Schema::hasColumn('users', 'skin_activa')) {
-                $table->dropForeign(['skin_activa']);
-                $table->dropColumn('skin_activa');
+            if (Schema::hasColumn('users', 'sactive_skina')) {
+                $table->dropForeign(['active_skin']);
+                $table->dropColumn('active_skin');
             }
         });
     }
