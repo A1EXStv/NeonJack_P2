@@ -142,6 +142,24 @@ export default [
                 ]
             },
 
+            /***********Ruta transacciones**************** */
+             {
+                name: 'transacciones',
+                path: 'transacciones',
+                meta: { breadCrumb: 'Transacciones' },
+                children: [
+                    {
+                        name: 'transacciones.index',
+                        path: '',
+                        component: () => import('../views/admin/transacciones/Index.vue'),
+                        meta: {
+                            breadCrumb: 'Transacciones',
+                            hideBreadcrumb: true
+                        }
+                    }
+                ]
+            },
+
             {
                 name: 'permissions',
                 path: 'permissions',
