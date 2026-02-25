@@ -24,7 +24,7 @@ class UpdateManoRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id' => ['required', 'exists:usuarios,id'],     
+            'user_id' => ['required', 'exists:users,id'],     
             'sala_id' => ['required', 'exists:salas,id'],       
             'creditos_jugados' => ['required', 'integer', 'min:0'],
             'creditos_ganados' => ['required', 'integer', 'min:0'],

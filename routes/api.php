@@ -95,10 +95,10 @@ Route::get('/salas', [SalaController::class, 'index']);
 Route::get('/salas/{sala}', [SalaController::class, 'show']);
 Route::delete('/salas/{sala}', [SalaController::class, 'destroy']);
 Route::post('/salas', [SalaController::class, 'store']);
-Route::post('/salas', [SalaController::class, 'update']);
+Route::post('/salas/{sala}', [SalaController::class, 'update']);
 
 Route::get('/manos', [ManoController::class, 'index']);
 Route::get('/manos/{mano}', [ManoController::class, 'show']);
 Route::delete('/manos/{mano}', [ManoController::class, 'destroy']);
 Route::post('/manos', [ManoController::class, 'store']);
-Route::post('/manos', [ManoController::class, 'update']);
+// Route::post('/manos/{mano}', [ManoController::class, 'update']);

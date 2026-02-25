@@ -15,7 +15,7 @@ class ManoController extends Controller
      */
     public function index()
     {
-        $mano = Mano::with('sala','usarios')->latest()->get();
+        $mano = Mano::with('salas','users')->latest()->get();
         return response()->json($mano);
     }
 
