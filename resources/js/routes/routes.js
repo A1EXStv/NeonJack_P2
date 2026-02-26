@@ -159,6 +159,22 @@ export default [
                     }
                 ]
             },
+            {
+                name: 'skins',
+                path: 'skins',
+                meta: { breadCrumb: 'Skins'},
+                children: [
+                    {
+                        name: 'skins.index',
+                        path: '',
+                        component: () => import('../views/admin/skins/Index.vue'),
+                        meta: {
+                            breadCrumb: 'Skins',
+                            hideBreadcrumb: true
+                        }
+                    }
+                ]
+            },
 
             {
                 name: 'permissions',

@@ -79,6 +79,7 @@
 import { computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useAbility } from '@casl/vue';
+import { icon } from '@fortawesome/fontawesome-svg-core';
 
 const route = useRoute();
 const router = useRouter();
@@ -129,7 +130,8 @@ const menuModel = computed(() => {
             label: 'Contenido',
             items: [
                 { label: 'Categorías', icon: 'pi pi-tags', route: '/admin/categories', permission: 'category-list' },
-                { label: 'Transacciones', icon: 'pi pi-wallet', route:'/admin/transacciones'}
+                { label: 'Transacciones', icon: 'pi pi-exchange', route:'/admin/transacciones'},
+                { label: 'Skins', icon: 'pi pi-palette', route:'/admin/skins'}
             ]
         }
     ];
