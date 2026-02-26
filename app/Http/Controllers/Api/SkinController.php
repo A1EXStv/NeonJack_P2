@@ -16,7 +16,7 @@ class SkinController extends Controller
      */
     public function index()
     {
-        $skins = Skin->get();
+        $skins = Skin::get();        
         return response()->json($skins);
     }
 
