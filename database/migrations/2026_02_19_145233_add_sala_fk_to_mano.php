@@ -8,10 +8,10 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::table('salas', function (Blueprint $table) {
+        Schema::table('manos', function (Blueprint $table) {
         
-            if (!Schema::hasColumn('salas', 'sala_id')) {
-                $table->foreignId('sala_id')->nullable()->constrained();
+            if (!Schema::hasColumn('manos', 'sala_id')) {
+                $table->foreignId('sala_id')->nullable()->constrained('salas');
             }
         });
     }
@@ -19,8 +19,8 @@ return new class extends Migration
     
     public function down(): void
     {
-        Schema::table('salas', function (Blueprint $table) {
-            if (Schema::hasColumn('salas', 'sala_id')) {
+        Schema::table('manos', function (Blueprint $table) {
+            if (Schema::hasColumn('manos', 'sala_id')) {
                 $table->dropForeign(['sala_id']);
                 $table->dropColumn('sala_id');
             }
