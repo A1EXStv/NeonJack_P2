@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\LogroController;
 use App\Http\Controllers\Api\LogController;
 use App\Http\Controllers\Api\SalaController;
 use App\Http\Controllers\Api\ManoController;
+use App\Http\Controllers\Api\AjustesController;
 
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\RoleController;
@@ -102,3 +103,9 @@ Route::get('/manos/{mano}', [ManoController::class, 'show']);
 Route::delete('/manos/{mano}', [ManoController::class, 'destroy']);
 Route::post('/manos', [ManoController::class, 'store']);
 // Route::post('/manos/{mano}', [ManoController::class, 'update']);
+
+Route::get('/ajustes', [AjustesController::class, 'index']);
+Route::get('/ajustes/{ajuste}', [AjustesController::class, 'show']);
+Route::delete('/ajustes/{ajuste}', [AjustesController::class, 'destroy']);
+Route::post('/ajustes', [AjustesController::class, 'store']);
+Route::post('/ajustes/{ajuste}', [AjustesController::class, 'update']);
