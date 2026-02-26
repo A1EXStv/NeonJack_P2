@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('manos', function (Blueprint $table) {
+        Schema::create('ajustes', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->integer('creditos_jugados');
-            $table->integer('creditos_ganados');
+            $table->string('clave')->unique();
+            $table->string('valor');
+            $table->string('descripcion')->nullable();
             $table->timestamps();
         });
     }
@@ -24,7 +24,7 @@ return new class extends Migration
      * Reverse the migrations.
      */
     public function down(): void
-    {   
-        Schema::dropIfExists('mano');
+    {
+        Schema::dropIfExists('ajustes');
     }
 };
