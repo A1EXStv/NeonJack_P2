@@ -84,9 +84,6 @@ class User extends Authenticatable implements HasMedia
         $this->notify(new UserResetPasswordNotification($token));
     }
 
-    
-
-
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection('images/users')

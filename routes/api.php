@@ -73,10 +73,11 @@ Route::get('/skins', [SkinController::class, 'index']);
 Route::get('/skins/{skin}', [SkinController::class, 'show']);
 Route::delete('/skins/{skin}', [SkinController::class, 'destroy']);
 Route::post('/skins', [SkinController::class, 'store']);
-Route::post('/skins/{skin}', [SkinController::class, 'update']);
+Route::put('/skins/{skin}', [SkinController::class, 'update']);
+
+Route::post('/skins/updateimg', [SkinController::class, 'updateimg']);
 
 // LOGROS
-
 Route::get('/logros', [LogroController::class, 'index']);
 Route::get('/logros/{logro}', [LogroController::class, 'show']);
 Route::delete('/logros/{logro}', [LogroController::class, 'destroy']);
