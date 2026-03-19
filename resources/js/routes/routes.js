@@ -176,6 +176,32 @@ export default [
                 ]
             },
 
+            /**********Ruta Ajustes *************************/
+           {
+                name: 'ajustes',
+                path: 'ajustes',
+                component: { template: '<router-view />' }, 
+                meta: { breadCrumb: 'Ajustes' },
+                children: [
+                    {
+                        name: 'ajustes.index',
+                        path: '',
+                        component: () => import('../views/admin/ajustes/index.vue')
+                    },
+                    {
+                        name: 'ajustes.create',
+                        path: 'create',
+                        component: () => import('../views/admin/ajustes/Create.vue')
+                    },
+                    {
+                        name: 'ajustes.update',
+                        path: 'update/:id',
+                        component: () => import('../views/admin/ajustes/Update.vue')
+                    }
+                ]
+            },
+
+
             {
                 name: 'permissions',
                 path: 'permissions',
