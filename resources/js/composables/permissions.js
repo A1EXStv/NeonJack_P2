@@ -71,7 +71,7 @@ export default function usePermissions() {
     }
     clearErrors()
   }
-
+/**Actuaiza insertando si esta APDATE buscando el id y si lo encuentra lo  borra y lo inserta y si no o en cuentra inserta*/
   const upsertPermissionRecord = (permissionRecord) => {
     if (!permissionRecord?.id) return
     permissions.value = [
@@ -95,7 +95,6 @@ export default function usePermissions() {
     permissions.value = response.data?.data ?? response.data ?? []
     return response
   }
-
   const getPermissionList = async () => {
     try {
       const response = await axios.get('/api/permissions')

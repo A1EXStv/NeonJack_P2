@@ -79,6 +79,7 @@
 import { computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useAbility } from '@casl/vue';
+import { icon } from '@fortawesome/fontawesome-svg-core';
 
 const route = useRoute();
 const router = useRouter();
