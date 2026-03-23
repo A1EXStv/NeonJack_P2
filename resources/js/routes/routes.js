@@ -172,6 +172,15 @@ export default [
                             breadCrumb: 'Skins',
                             hideBreadcrumb: true
                         }
+                    },
+                    {
+                        name: 'admin.skins.edit',
+                        path: 'edit/:id',
+                        component: () => import('../views/admin/skins/Edit.vue'),
+                        meta: {
+                            breadCrumb: 'Editar Skins',
+                            linked: false
+                        }
                     }
                 ]
             },

@@ -68,15 +68,14 @@ Route::delete('/transacciones/{transaccion}', [TransaccionController::class, 'de
 Route::post('/transacciones', [TransaccionController::class, 'store']);
 
 // Route::apiResource('transacciones', TransaccionController::class);
-
+Route::post('/skins', [SkinController::class, 'store']);
 Route::get('/skins', [SkinController::class, 'index']);
 Route::get('/skins/{skin}', [SkinController::class, 'show']);
 Route::delete('/skins/{skin}', [SkinController::class, 'destroy']);
-Route::post('/skins', [SkinController::class, 'store']);
-Route::post('/skins/{skin}', [SkinController::class, 'update']);
+Route::put('/skins/{skin}', [SkinController::class, 'update']);
+Route::post('/skins/updateimg', [SkinController::class, 'updateimg']);
 
 // LOGROS
-
 Route::get('/logros', [LogroController::class, 'index']);
 Route::get('/logros/{logro}', [LogroController::class, 'show']);
 Route::delete('/logros/{logro}', [LogroController::class, 'destroy']);
@@ -89,9 +88,7 @@ Route::get('/logs', [LogController::class, 'index']);
 Route::get('/logs/{log}', [LogController::class, 'show']);
 Route::delete('/logs/{log}', [LogController::class, 'destroy']);
 Route::post('/logs', [LogController::class, 'store']);
-Route::post('/skins', [SkinController::class, 'update']);
  
-
 Route::get('/salas', [SalaController::class, 'index']);
 Route::get('/salas/{sala}', [SalaController::class, 'show']);
 Route::delete('/salas/{sala}', [SalaController::class, 'destroy']);
