@@ -58,7 +58,7 @@ class SkinController extends Controller
 
         return new SkinResource($skin);
     }*/
-        public function store(StoreSkinRequest $request)
+public function store(StoreSkinRequest $request)
 {
     $data = $request->validated();
 
