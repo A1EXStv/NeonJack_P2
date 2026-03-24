@@ -15,13 +15,7 @@ export default function useRoles() {
   }
 
   const role = ref({ ...initialRole })
-  const {
-    errors,
-    validate,
-    clearErrors,
-    hasError,
-    getError
-  } = useValidation()
+  const {errors, validate, clearErrors, hasError, getError} = useValidation()
 
   const roleSchema = yup.object({
     name: yup
