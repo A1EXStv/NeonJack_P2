@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\LogController;
 use App\Http\Controllers\Api\SalaController;
 use App\Http\Controllers\Api\ManoController;
 use App\Http\Controllers\Api\AjustesController;
+use App\Http\Controllers\Api\CarteraController;
 
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\RoleController;
@@ -89,20 +90,30 @@ Route::get('/logs/{log}', [LogController::class, 'show']);
 Route::delete('/logs/{log}', [LogController::class, 'destroy']);
 Route::post('/logs', [LogController::class, 'store']);
  
+// SALAS
 Route::get('/salas', [SalaController::class, 'index']);
 Route::get('/salas/{sala}', [SalaController::class, 'show']);
-Route::delete('/salas/{sala}', [SalaController::class, 'destroy']);
-Route::post('/salas', [SalaController::class, 'store']);
+Route::delete('salas/{sala}/leave', [SalaController::class, 'leave']);
+Route::post('salas/{sala}/join', [SalaController::class, 'join']);
 Route::post('/salas/{sala}', [SalaController::class, 'update']);
 
+//MANOS
 Route::get('/manos', [ManoController::class, 'index']);
 Route::get('/manos/{mano}', [ManoController::class, 'show']);
 Route::delete('/manos/{mano}', [ManoController::class, 'destroy']);
 Route::post('/manos', [ManoController::class, 'store']);
 // Route::post('/manos/{mano}', [ManoController::class, 'update']);
 
+//AJUSTES
 Route::get('/ajustes', [AjustesController::class, 'index']);
 Route::get('/ajustes/{ajuste}', [AjustesController::class, 'show']);
 Route::delete('/ajustes/{ajuste}', [AjustesController::class, 'destroy']);
 Route::post('/ajustes', [AjustesController::class, 'store']);
 Route::post('/ajustes/{ajuste}', [AjustesController::class, 'update']);
+
+//CARTERA
+Route::get('/carteras', [CarteraController::class, 'index']);
+Route::get('/carteras/{cartera}', [CarteraController::class, 'show']);
+Route::delete('/carteras/{cartera}', [CarteraController::class, 'destroy']);
+Route::post('/carteras', [CarteraController::class, 'store']);
+// Route::post('/carteras/{cartera}', [CarteraController::class, 'update']);
