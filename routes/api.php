@@ -95,8 +95,8 @@ Route::post('/skins', [SkinController::class, 'update']);
 // SALAS
 Route::get('/salas', [SalaController::class, 'index']);
 Route::get('/salas/{sala}', [SalaController::class, 'show']);
-Route::delete('/salas/{sala}', [SalaController::class, 'destroy']);
-Route::post('/salas', [SalaController::class, 'store']);
+Route::delete('salas/{sala}/leave', [SalaController::class, 'leave']);
+Route::post('salas/{sala}/join', [SalaController::class, 'join']);
 Route::post('/salas/{sala}', [SalaController::class, 'update']);
 
 //MANOS
