@@ -52,15 +52,22 @@ export default function useAuth() {
         await axios.post('/login', loginForm)
             .then(async response => {
                 await auth.getUser()
-                //await store.dispatch('auth/getUser')
                 await loginUser()
+                
+                const role = auth.user.roles[0].name
+
                 swal({
                     icon: 'success',
                     title: 'Login correcto',
                     showConfirmButton: false,
                     timer: 1500
                 })
-                await router.push({ name: 'admin.index' })
+
+                if (role === 'admin') {
+                    await router.push({ name: 'admin.index' })
+                } else {
+                    await router.push({ name: 'app.profile' })
+                }
             })
             .catch(error => {
                 if (error.response?.data) {

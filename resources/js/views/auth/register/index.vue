@@ -1,18 +1,16 @@
 <template>
-    <div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8" style="background-color: #110c22;">
         <div class="max-w-2xl w-full">
             <!-- Logo y título -->
             <div class="text-center mb-8">
-                <h2 class="text-3xl font-bold">
-                    {{ $t('register') }}
-                </h2>
+                <img src="/images/logo_sin_fondo.png" alt="Logo">
                 <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
                     Regístrate para comenzar
                 </p>
             </div>
 
             <!-- Formulario -->
-            <Card>
+            <Card class="custom-card p-6 rounded-lg">
                 <template #content>
                     <form @submit.prevent="submitRegister" class="space-y-6">
                         <!-- Name -->
@@ -109,13 +107,13 @@
                         </div>
 
                         <!-- Submit Button -->
-                        <Button
+                        <BotonesPrincipal
                             type="submit"
                             :label="$t('register')"
                             :loading="processing"
                             :disabled="processing"
                             class="w-full"
-                            size="large"
+                            size="large" 
                         />
 
                         <!-- Login link -->
@@ -139,6 +137,20 @@
 
 <script setup>
 import useAuth from '@/composables/auth';
+import BotonesPrincipal from '../../../components/botones-principal.vue';
 
 const { registerForm, validationErrors, processing, submitRegister } = useAuth();
 </script>
+<style scoped>
+:deep(.custom-card.p-card) {
+    background: rgba(255, 255, 255, 0.08) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    border-radius: 0.75rem;
+}
+
+:deep(.custom-card .p-card-body) {
+    background: transparent !important;
+}
+</style>
