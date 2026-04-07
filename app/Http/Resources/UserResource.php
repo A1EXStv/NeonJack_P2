@@ -23,7 +23,7 @@ class UserResource extends JsonResource
             'email' => $this->email,
             'roles' => RoleResource::collection($this->roles),
             'avatar' => count($this->getMedia('*')) > 0 ? $this->getMedia('*')[0]->getUrl() : null,
-            'created_at' => $this->created_at->toDateString()
+            'created_at' => $this->created_at?->toDateString()
         ];
     }
 }

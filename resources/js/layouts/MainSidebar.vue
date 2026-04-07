@@ -132,7 +132,6 @@ const menuModel = computed(() => {
                 { label: 'Categorías', icon: 'pi pi-tags', route: '/admin/categories', permission: 'category-list' },
                 { label: 'Transacciones', icon: 'pi pi-wallet', route:'/admin/transacciones'},
                 { label: 'Ajustes', icon: 'pi pi-cog', route:'/admin/ajustes'}
-                
             ]
         }
     ];
