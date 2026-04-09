@@ -11,6 +11,12 @@ import { langStore } from "@/store/lang";
 import './plugins/axios.js';
 import App from './main.vue'
 
+
+/********BOOTSTRAP******* */
+import 'bootstrap/dist/css/bootstrap.min.css'
+import 'bootstrap'
+
+
 /*PRIMEVUE */
 import PrimeVue from "primevue/config";
 import Avatar from 'primevue/avatar';
