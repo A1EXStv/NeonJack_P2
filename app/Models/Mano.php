@@ -1,23 +1,46 @@
 <?php
 
 namespace App\Models;
+
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Mano extends Model {
-    use HasFactory;
+class Mano extends Model
+{
+    protected $fillable = [
+        'sala_id',
+        'user_id',
+        'partida_id',
+        'creditos_jugados',
+        'creditos_ganados',
+    ];
 
-    protected $table = 'manos';
-    protected $fillable = ['user_id', 'creditos_jugados', 'creditos_ganados', 'sala_id'];
+    protected $casts = [
+        'creditos_jugados' => 'integer',
+        'creditos_ganados' => 'integer',
+    ];
 
-    // Una mano pertenece a una sala
-    public function sala()
+    // ─── Relaciones ───────────────────────────────────────────────
+
+    public function sala(): BelongsTo
     {
-        return $this->belongsTo(Sala::class); 
+        return $this->belongsTo(Sala::class);
     }
 
-    public function user()
+    public function usuario(): BelongsTo
     {
-        return $this->hasMany(User::class);
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function partida(): BelongsTo
+    {
+        return $this->belongsTo(Partida::class);
+    }
+
+    // ─── Helpers ──────────────────────────────────────────────────
+
+    public function neto(): int
+    {
+        return $this->creditos_ganados - $this->creditos_jugados;
     }
 }
