@@ -25,6 +25,10 @@ class User extends Authenticatable implements HasMedia
         'password',
         'surname1',
         'surname2',
+        'codigo_postal',
+        'dni',
+        'direccion',
+        'fecha_nacimiento',
         'wallet',
         'active_skin_id',
     ];

@@ -70,6 +70,61 @@
                                 {{ validationErrors.email[0] }}
                             </small>
                         </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="flex flex-col gap-2">
+                                <label for="postal_code" class="font-medium">{{ $t('codigo_postal') }}</label>
+                                <InputText
+                                    id="postal_code"
+                                    v-model="registerForm.postal_code"
+                                    placeholder="08001"
+                                    :invalid="!!validationErrors?.postal_code"
+                                />
+                                <small v-if="validationErrors?.postal_code" class="text-red-500">
+                                    {{ validationErrors.postal_code[0] }}
+                                </small>
+                            </div>
+
+                            <div class="flex flex-col gap-2">
+                                <label for="dni" class="font-medium">{{ $t('dni') }}</label>
+                                <InputText
+                                    id="dni"
+                                    v-model="registerForm.dni"
+                                    placeholder="12345678A"
+                                    :invalid="!!validationErrors?.dni"
+                                />
+                                <small v-if="validationErrors?.dni" class="text-red-500">
+                                    {{ validationErrors.dni[0] }}
+                                </small>
+                            </div>
+                        </div>
+
+                        <!-- Dirección -->
+                        <div class="flex flex-col gap-2">
+                            <label for="address" class="font-medium">{{ $t('direccion') }}</label>
+                            <InputText
+                                id="address"
+                                v-model="registerForm.address"
+                                placeholder="Calle, número, piso..."
+                                :invalid="!!validationErrors?.address"
+                            />
+                            <small v-if="validationErrors?.address" class="text-red-500">
+                                {{ validationErrors.address[0] }}
+                            </small>
+                        </div>
+
+                        <!-- Fecha de nacimiento -->
+                        <div class="flex flex-col gap-2">
+                            <label for="fecha_nacimiento" class="font-medium">{{ $t('fecha_nacimiento') }}</label>
+                            <InputText
+                                id="fecha_nacimiento"
+                                type="date"
+                                v-model="registerForm.fecha_nacimiento"
+                                :invalid="!!validationErrors?.fecha_nacimiento"
+                            />
+                            <small v-if="validatxionErrors?.fecha_nacimiento" class="text-red-500">
+                                {{ validationErrors.fecha_nacimiento[0] }}
+                            </small>
+                        </div>
 
                         <!-- Password y Confirm Password -->
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">

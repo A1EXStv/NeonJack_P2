@@ -25,6 +25,12 @@ class StoreUserRequest extends FormRequest
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8'],
+            'surname1' => ['required', 'string', 'max:255'],
+            'surname2' => ['nullable', 'string', 'max:255'],
+            'codigo_postal' => ['required', 'integer', 'max:20'],
+            'dni' => ['required', 'string', 'max:20', 'unique:users'],
+            'direccion' => ['required', 'string', 'max:255'],
+            'fecha_nacimiento' => ['required', 'date', 'max:255'],
         ];
     }
 }
