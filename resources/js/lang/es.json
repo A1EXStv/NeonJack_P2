@@ -33,5 +33,9 @@
     "login_with": "Iniciar Sesión con",
     "register_with": "Registro con",
     "surname1": "Primer Apellido",
-    "surname2": "Segundo Apellido"
+    "surname2": "Segundo Apellido",
+    "codigo_postal": "Código Postal",
+    "dni": "DNI",
+    "direccion": "Dirección",
+    "fecha_nacimiento": "Fecha de Nacimiento"
 }

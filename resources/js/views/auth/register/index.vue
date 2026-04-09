@@ -121,7 +121,7 @@
                                 v-model="registerForm.fecha_nacimiento"
                                 :invalid="!!validationErrors?.fecha_nacimiento"
                             />
-                            <small v-if="validatxionErrors?.fecha_nacimiento" class="text-red-500">
+                            <small v-if="validationErrors?.fecha_nacimiento" class="text-red-500">
                                 {{ validationErrors.fecha_nacimiento[0] }}
                             </small>
                         </div>
