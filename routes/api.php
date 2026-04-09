@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\SalaController;
 use App\Http\Controllers\Api\ManoController;
 use App\Http\Controllers\Api\AjustesController;
 use App\Http\Controllers\Api\CarteraController;
+use App\Http\Controllers\Api\blackjackController;
 
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\RoleController;
@@ -55,14 +56,6 @@ Route::get('category-list', [CategoryController::class, 'getList']);
 
 
 
-Route::apiResource('posts', PostController::class);
-
-// Route::get('/posts', [PostController::class, 'index']);
-// Route::get('/posts/{post}', [PostController::class, 'show']);
-// Route::delete('/posts/{post}', [PostController::class, 'destroy']);
-// Route::post('/posts/{post}', [PostController::class, 'store']);
-
-
 Route::get('/transacciones', [TransaccionController::class, 'index']);
 Route::get('/transacciones/{transaccion}', [TransaccionController::class, 'show']);
 Route::delete('/transacciones/{transaccion}', [TransaccionController::class, 'destroy']);
@@ -91,13 +84,7 @@ Route::get('/logs/{log}', [LogController::class, 'show']);
 Route::delete('/logs/{log}', [LogController::class, 'destroy']);
 Route::post('/logs', [LogController::class, 'store']);
 Route::post('/skins', [SkinController::class, 'update']);
- 
-// SALAS
-Route::get('/salas', [SalaController::class, 'index']);
-Route::get('/salas/{sala}', [SalaController::class, 'show']);
-Route::delete('salas/{sala}/leave', [SalaController::class, 'leave']);
-Route::post('salas/{sala}/join', [SalaController::class, 'join']);
-Route::post('/salas/{sala}', [SalaController::class, 'update']);
+
 
 //MANOS
 Route::get('/manos', [ManoController::class, 'index']);
@@ -119,3 +106,20 @@ Route::get('/carteras/{cartera}', [CarteraController::class, 'show']);
 Route::delete('/carteras/{cartera}', [CarteraController::class, 'destroy']);
 Route::post('/carteras', [CarteraController::class, 'store']);
 // Route::post('/carteras/{cartera}', [CarteraController::class, 'update']);
+
+Route::middleware('auth:sanctum')->group(function () {
+ 
+    // ── Salas ─────────────────────────────────────────────────────
+    Route::apiResource('salas', SalaController::class);
+    Route::post  ('salas/{sala}/join',  [SalaController::class, 'join']);
+    Route::delete('salas/{sala}/leave', [SalaController::class, 'leave']);
+ 
+    // ── Blackjack ─────────────────────────────────────────────────
+    Route::post('salas/{sala}/iniciar',       [BlackjackController::class, 'iniciar']);
+    Route::get ('partidas/{partida}/estado',  [BlackjackController::class, 'estado']);
+    Route::post('partidas/{partida}/apostar', [BlackjackController::class, 'apostar']);
+    Route::post('partidas/{partida}/hit',     [BlackjackController::class, 'hit']);
+    Route::post('partidas/{partida}/stand',   [BlackjackController::class, 'stand']);
+    Route::post('partidas/{partida}/doblar',  [BlackjackController::class, 'doblar']);
+    Route::post('partidas/{partida}/dividir', [BlackjackController::class, 'dividir']);
+});
