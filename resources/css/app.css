@@ -173,6 +173,12 @@
     }
 }
 
+/*************Color de fondo de la pagina**************/
+body {
+    background-color: #110c22 !important;
+    color: white !important;
+}
+
 /* ============================================
    Utilities de TailAdmin
    ============================================ */
