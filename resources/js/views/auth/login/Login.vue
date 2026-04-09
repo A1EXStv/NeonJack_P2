@@ -1,18 +1,16 @@
 <template>
-    <div class="min-h-screen flex items-center justify-center py-8 px-4 sm:px-6 lg:px-8">
+    <div class="min-h-screen flex items-center justify-center py-8 px-4 sm:px-6 lg:px-8" style="background-color: #110c22;">    
         <div class="max-w-md w-full">
             <!-- Logo y título -->
             <div class="text-center mb-8">
-                <h2 class="text-3xl font-bold">
-                    Bienvenido a SQL Check!
-                </h2>
-                <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
+                <img src="/images/logo_sin_fondo.png" alt="Logo">
+                <p class="mt-2 text-sm text-gray-600 gray:text-gray-400">
                     Inicia sesión para continuar
                 </p>
             </div>
 
             <!-- Formulario -->
-            <Card>
+            <Card class="custom-card p-6 rounded-lg">
                 <template #content>
                     <form @submit.prevent="submitLogin" class="space-y-6">
                         <!-- Email -->
@@ -73,15 +71,13 @@
                         </div>
 
                         <!-- Submit Button -->
-                        <Button
+                        <BotonesPrincipal
                             type="submit"
                             :label="$t('login')"
-                            :loading="processing"
+                            variant="primary"
                             :disabled="processing"
-                            class="w-full"
-                            size="large"
+                            @click="submitLogin"
                         />
-
                         <!-- Register link -->
                         <div class="text-center">
                             <p class="text-sm text-gray-600 dark:text-gray-400">
@@ -103,10 +99,10 @@
 
 <script setup>
 import useAuth from '@/composables/auth';
+import BotonesPrincipal from '../../../components/botones-principal.vue';
 
 const { loginForm, validationErrors, processing, submitLogin } = useAuth();
 </script>
-
 <style scoped>
 /* Asegurar que PrimeIcons se muestren correctamente */
 :deep(.pi) {
@@ -136,5 +132,17 @@ const { loginForm, validationErrors, processing, submitLogin } = useAuth();
 /* Estilos para Button de PrimeVue */
 :deep(.p-button) {
     width: 100%;
+}
+
+:deep(.custom-card.p-card) {
+    background: rgba(255, 255, 255, 0.08) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    border-radius: 0.75rem;
+}
+
+:deep(.custom-card .p-card-body) {
+    background: transparent !important;
 }
 </style>

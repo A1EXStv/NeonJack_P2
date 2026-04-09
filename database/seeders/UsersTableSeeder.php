@@ -33,7 +33,7 @@ class UsersTableSeeder extends Seeder
                 'created_at' => '2025-07-25 08:51:49',
                 'updated_at' => '2025-07-25 08:51:49',
                 'wallet' => 100,
-                'active_skin' => 1,
+                // 'active_skin' => 1,
             ),
         ));
 
