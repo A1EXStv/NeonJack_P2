@@ -1,18 +1,16 @@
 <template>
-    <div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8" style="background-color: #110c22;">
         <div class="max-w-2xl w-full">
             <!-- Logo y título -->
             <div class="text-center mb-8">
-                <h2 class="text-3xl font-bold">
-                    {{ $t('register') }}
-                </h2>
+                <img src="/images/logo_sin_fondo.png" alt="Logo">
                 <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
                     Regístrate para comenzar
                 </p>
             </div>
 
             <!-- Formulario -->
-            <Card>
+            <Card class="custom-card p-6 rounded-lg">
                 <template #content>
                     <form @submit.prevent="submitRegister" class="space-y-6">
                         <!-- Name -->
@@ -72,6 +70,61 @@
                                 {{ validationErrors.email[0] }}
                             </small>
                         </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="flex flex-col gap-2">
+                                <label for="postal_code" class="font-medium">{{ $t('codigo_postal') }}</label>
+                                <InputText
+                                    id="postal_code"
+                                    v-model="registerForm.postal_code"
+                                    placeholder="08001"
+                                    :invalid="!!validationErrors?.postal_code"
+                                />
+                                <small v-if="validationErrors?.postal_code" class="text-red-500">
+                                    {{ validationErrors.postal_code[0] }}
+                                </small>
+                            </div>
+
+                            <div class="flex flex-col gap-2">
+                                <label for="dni" class="font-medium">{{ $t('dni') }}</label>
+                                <InputText
+                                    id="dni"
+                                    v-model="registerForm.dni"
+                                    placeholder="12345678A"
+                                    :invalid="!!validationErrors?.dni"
+                                />
+                                <small v-if="validationErrors?.dni" class="text-red-500">
+                                    {{ validationErrors.dni[0] }}
+                                </small>
+                            </div>
+                        </div>
+
+                        <!-- Dirección -->
+                        <div class="flex flex-col gap-2">
+                            <label for="address" class="font-medium">{{ $t('direccion') }}</label>
+                            <InputText
+                                id="address"
+                                v-model="registerForm.address"
+                                placeholder="Calle, número, piso..."
+                                :invalid="!!validationErrors?.address"
+                            />
+                            <small v-if="validationErrors?.address" class="text-red-500">
+                                {{ validationErrors.address[0] }}
+                            </small>
+                        </div>
+
+                        <!-- Fecha de nacimiento -->
+                        <div class="flex flex-col gap-2">
+                            <label for="fecha_nacimiento" class="font-medium">{{ $t('fecha_nacimiento') }}</label>
+                            <InputText
+                                id="fecha_nacimiento"
+                                type="date"
+                                v-model="registerForm.fecha_nacimiento"
+                                :invalid="!!validationErrors?.fecha_nacimiento"
+                            />
+                            <small v-if="validationErrors?.fecha_nacimiento" class="text-red-500">
+                                {{ validationErrors.fecha_nacimiento[0] }}
+                            </small>
+                        </div>
 
                         <!-- Password y Confirm Password -->
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -109,13 +162,13 @@
                         </div>
 
                         <!-- Submit Button -->
-                        <Button
+                        <BotonesPrincipal
                             type="submit"
                             :label="$t('register')"
                             :loading="processing"
                             :disabled="processing"
                             class="w-full"
-                            size="large"
+                            size="large" 
                         />
 
                         <!-- Login link -->
@@ -139,6 +192,20 @@
 
 <script setup>
 import useAuth from '@/composables/auth';
+import BotonesPrincipal from '../../../components/botones-principal.vue';
 
 const { registerForm, validationErrors, processing, submitRegister } = useAuth();
 </script>
+<style scoped>
+:deep(.custom-card.p-card) {
+    background: rgba(255, 255, 255, 0.08) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    border-radius: 0.75rem;
+}
+
+:deep(.custom-card .p-card-body) {
+    background: transparent !important;
+}
+</style>

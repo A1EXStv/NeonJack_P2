@@ -133,7 +133,6 @@ const menuModel = computed(() => {
                 { label: 'Skins', icon: 'pi pi-box', route: '/admin/skins'},
                 { label: 'Transacciones', icon: 'pi pi-wallet', route:'/admin/transacciones'},
                 { label: 'Ajustes', icon: 'pi pi-cog', route:'/admin/ajustes'}
-                
             ]
         }
     ];
