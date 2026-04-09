@@ -38,5 +38,9 @@
     "failed_to_verify_email": "Failed to verify email.",
     "verify_email_address": "We sent you an email with an the verification link.",
     "surname1": "First Surname",
-    "surname2": "Second Surname"
+    "surname2": "Second Surname",
+    "codigo_postal": "Postal Code",
+    "dni": "ID Number (DNI)",
+    "direccion": "Address",
+    "fecha_nacimiento": "Date of Birth"
 }

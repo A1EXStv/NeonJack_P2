@@ -39,6 +39,10 @@ export default function useAuth() {
         surname1: '',
         surname2: '',
         email: '',
+        postal_code: '',
+        dni: '',
+        address: '',
+        fecha_nacimiento: '',
         password: '',
         password_confirmation: ''
     })
