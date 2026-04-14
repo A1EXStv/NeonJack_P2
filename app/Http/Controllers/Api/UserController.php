@@ -76,6 +76,7 @@ class UserController extends Controller
         $user->dni = $request->dni;
         $user->direccion = $request->direccion;
         $user->fecha_nacimiento = $request->fecha_nacimiento;
+        $user->alias = $request->alias;
 
         $user->password = Hash::make($request->password);
 

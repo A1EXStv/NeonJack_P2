@@ -32,6 +32,7 @@ class RegisterRequest extends FormRequest
             'dni'              => ['required', 'string', 'max:20', 'unique:users,dni'],
             'address'          => ['required', 'string', 'max:255'],
             'fecha_nacimiento' => ['required', 'date'],
+            'alias'            => ['nullable', 'string', 'max:255', 'unique:users,alias'],
             'password'         => ['required', 'string', 'min:8', 'confirmed'],
         ];
     }
