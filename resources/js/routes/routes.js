@@ -82,7 +82,9 @@ export default [
             },
         ]
     },
-
+    {
+        
+    },
     {
         path: '/app',
         component: AuthenticatedUserLayout,
