@@ -7,14 +7,13 @@ import { ref } from 'vue';
 import MainLayout from './MainLayout.vue';
 
 const items = ref([
-   
     {
-        label: 'Contenido',
+        label: 'Juego',
         items: [
             {
-                label: 'Posts',
-                icon: 'pi pi-th-large',
-                route: '/app/posts'
+                label: 'Salas',
+                icon: 'pi pi-table',
+                route: '/app/salas'
             },
         ]
     },

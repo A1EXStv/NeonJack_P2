@@ -38,6 +38,10 @@ class Sala extends Model {
         return $this->hasMany(Mano::class);
     }
 
+    public function partidas(){
+        return $this->hasMany(Partida::class);
+    }
+
      //AYUDAS
  
     public function isFull(): bool
