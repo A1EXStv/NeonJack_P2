@@ -38,69 +38,61 @@ export function useSkins() {
     // Funcio de skin por id
     const getSkinById = async (id) => {
         return axios.get(`/api/skins/${id}`)
-                .then(response => {
-                    skin.value = response.data.data;
-                    return response;
-                }) 
-        };
-const crearSkin = async (data, imagen) => {
-    isSubmitting.value = true;
-    errors.value = {};
+            .then(response => {
+                skin.value = response.data.data;
+                return response;
+            })
+    };
+    const crearSkin = async (data, imagen) => {
+        isSubmitting.value = true;
+        errors.value = {};
 
-    try {
-        const formData = new FormData();
+        try {
+            const formData = new FormData();
+            
+            formData.append('nombre', data.nombre);
+            formData.append('precio', Number(data.precio));
+            formData.append('activo', data.activo ? 1 : 0);
 
-        // Campos
-        formData.append('nombre', data.nombre);
-        formData.append('precio', Number(data.precio));
-        formData.append('activo', data.activo ? 1 : 0);
-
-        // Imagen
-        if (imagen instanceof File) {
-            formData.append('picture', imagen);
-        }
-
-        console.log('ENVIANDO:', data, imagen);
-
-        const response = await axios.post('/api/skins', formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data'
+            // Imagen
+            if (imagen instanceof File) {
+                formData.append('picture', imagen);
             }
-        });
+            console.log('ENVIANDO:', data, imagen);
+            const response = await axios.post('/api/skins', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
 
-        console.log('RESPUESTA BACKEND:', response.data);
+            console.log('RESPUESTA BACKEND:', response.data);
+            const nuevaSkin = response.data.data;
+            console.log('SKIN FINAL:', nuevaSkin);
+            skins.value.push(nuevaSkin);
+            return nuevaSkin;
 
-        // 🔥 AQUÍ ESTÁ LA CLAVE
-        const nuevaSkin = response.data.data;
+        } catch (error) {
+            console.log("ERROR BACKEND:", error.response?.data);
 
-        console.log('SKIN FINAL:', nuevaSkin);
+            if (error.response?.status === 422) {
+                errors.value = error.response.data.errors;
+            } else {
+                console.error("Error creando skin", error);
+            }
 
-        // Guardar en array
-        skins.value.push(nuevaSkin);
+            return null;
 
-        return nuevaSkin;
-
-    } catch (error) {
-        console.log("ERROR BACKEND:", error.response?.data);
-
-        if (error.response?.status === 422) {
-            errors.value = error.response.data.errors;
-        } else {
-            console.error("Error creando skin", error);
+        } finally {
+            isSubmitting.value = false;
         }
+    };
 
-        return null;
-
-    } finally {
-        isSubmitting.value = false;
-    }
-};
     //Actulizae skin
     const actualizarSkin = async () => {
         isSubmitting.value = true;
-        try {     
+        try {
             const response = await axios.put(`/api/skins/${skin.value.id}`, skin.value);
-           
+
             // Actualiza el array local
             const index = skins.value.findIndex(s => s.id === skin.value.id);
             if (index !== -1) skins.value[index] = response.data.data;

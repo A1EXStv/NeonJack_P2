@@ -41,8 +41,12 @@
             </div>
         </div>
         <router-view />
+        <FooterLayout /> 
+        
 </template>
-
+<script setup>
+import FooterLayout from './FooterLayout.vue'
+</script>
 <style scoped>
 .custom-navbar {
     position: absolute;
