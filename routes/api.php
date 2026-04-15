@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\TransaccionController;
 use App\Http\Controllers\Api\SkinController;
 use App\Http\Controllers\Api\LogroController;
 use App\Http\Controllers\Api\LogController;
+use App\Http\Controllers\Api\BlackjackController;
 use App\Http\Controllers\Api\SalaController;
 use App\Http\Controllers\Api\ManoController;
 use App\Http\Controllers\Api\AjustesController;
@@ -91,12 +92,26 @@ Route::get('/logs/{log}', [LogController::class, 'show']);
 Route::delete('/logs/{log}', [LogController::class, 'destroy']);
 Route::post('/logs', [LogController::class, 'store']);
  
-// SALAS
-Route::get('/salas', [SalaController::class, 'index']);
-Route::get('/salas/{sala}', [SalaController::class, 'show']);
-Route::delete('salas/{sala}/leave', [SalaController::class, 'leave']);
-Route::post('salas/{sala}/join', [SalaController::class, 'join']);
-Route::post('/salas/{sala}', [SalaController::class, 'update']);
+
+// SALAS (requieren auth — Auth::user() debe estar disponible)
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/salas', [SalaController::class, 'index']);
+    Route::post('/salas', [SalaController::class, 'store']);
+    Route::get('/salas/{sala}', [SalaController::class, 'show']);
+    Route::post('/salas/{sala}', [SalaController::class, 'update']);
+    Route::delete('/salas/{sala}', [SalaController::class, 'destroy']);
+    Route::post('/salas/{sala}/join', [SalaController::class, 'join']);
+    Route::delete('/salas/{sala}/leave', [SalaController::class, 'leave']);
+
+    // BLACKJACK
+    Route::post('/salas/{sala}/iniciar', [BlackjackController::class, 'iniciar']);
+    Route::get('/partidas/{partida}/estado', [BlackjackController::class, 'estado']);
+    Route::post('/partidas/{partida}/apostar', [BlackjackController::class, 'apostar']);
+    Route::post('/partidas/{partida}/hit', [BlackjackController::class, 'hit']);
+    Route::post('/partidas/{partida}/stand', [BlackjackController::class, 'stand']);
+    Route::post('/partidas/{partida}/doblar', [BlackjackController::class, 'doblar']);
+    Route::post('/partidas/{partida}/dividir', [BlackjackController::class, 'dividir']);
+});
 
 //MANOS
 Route::get('/manos', [ManoController::class, 'index']);

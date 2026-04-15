@@ -72,7 +72,7 @@
             </template>
         </Card>
 
-        <Create v-model:visible="dialogOpen" />
+        <Create v-model:visible="dialogOpen" @skinCreated="getSkins" />
    
     </div>
 </template>

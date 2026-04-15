@@ -44,7 +44,7 @@ const props = defineProps({
     visible: Boolean
 })
 
-const emit = defineEmits(['update:visible'])
+const emit = defineEmits(['update:visible', 'skinCreated'])
 
 const { skin, crearSkin, errors, isSubmitting, resetSkin } = useSkins()
 
@@ -71,6 +71,7 @@ const botonCrear = async () => {
     if (crear) {
         resetSkin();
         closeDialog();
+        emit('skinCreated');
     } else {
         console.error("No se creó la skin correctamente");
     }
