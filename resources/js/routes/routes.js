@@ -100,7 +100,18 @@ export default [
                     breadCrumb: 'Perfil',
                 },
             },
-
+            {
+                name: 'game.lobby',
+                path: 'salas',
+                component: () => import('../views/user/game/Lobby.vue'),
+                meta: { breadCrumb: 'Salas', hideBreadcrumb: true },
+            },
+            {
+                name: 'game.table',
+                path: 'game/:salaId/:partidaId',
+                component: () => import('../views/user/game/GameTable.vue'),
+                meta: { breadCrumb: 'Partida', hideBreadcrumb: true },
+            },
         ]
     },
 

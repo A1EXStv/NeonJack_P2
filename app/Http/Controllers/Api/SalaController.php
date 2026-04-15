@@ -7,6 +7,7 @@ use App\Events\PlayerLeftRoom;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreSalaRequest;
 use App\Http\Requests\UpdateSalaRequest;
+use App\Models\PartidaUser;
 use App\Models\Sala;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
@@ -19,7 +20,13 @@ class SalaController extends Controller
      */
     public function index(): JsonResponse
     {
-        $salas = Sala::with(['manos.usuarios'])->latest()->get();
+        $salas = Sala::with(['players'])
+            ->whereIn('status', ['waiting', 'playing'])
+            ->latest()
+            ->get()
+            ->map(fn ($sala) => array_merge($sala->toArray(), [
+                'isFull' => $sala->isFull(),
+            ]));
         return response()->json($salas);
     }
 
@@ -50,11 +57,14 @@ class SalaController extends Controller
     }
 
     /**
-     * Muestra una sala específica.
+     * Muestra una sala específica con jugadores y la partida activa (si existe).
      */
     public function show(Sala $sala): JsonResponse
     {
-        return response()->json($sala->load('manos.usuarios'));
+        return response()->json($sala->load([
+            'players',
+            'partidas' => fn ($q) => $q->where('estado', 'en_curso')->latest()->limit(1),
+        ]));
     }
 
     /**
@@ -90,18 +100,39 @@ class SalaController extends Controller
             return response()->json(['message' => 'La sala está llena.'], 422);
         }
 
-        if ($sala->status !== 'waiting') {
-            return response()->json(['message' => 'La partida ya ha comenzado.'], 422);
+        // Durante la fase de apuesta se puede entrar; en cualquier otro momento no.
+        $partidaEnApuesta = null;
+        if ($sala->status === 'playing') {
+            $partida = $sala->partidas()
+                ->where('estado', 'en_curso')
+                ->latest()
+                ->first();
+
+            if (! $partida || ! $partida->partida_usuarios()->where('estado', 'apostando')->exists()) {
+                return response()->json(['message' => 'La partida ya está en curso y no está en fase de apuesta.'], 422);
+            }
+            $partidaEnApuesta = $partida;
         }
 
         $seat = $sala->availableSeat();
 
-        DB::transaction(function () use ($sala, $user, $seat) {
+        DB::transaction(function () use ($sala, $user, $seat, $partidaEnApuesta) {
             $sala->players()->attach($user->id, [
                 'status' => 'sitting',
                 'chips'  => 1000,
                 'seat'   => $seat,
             ]);
+
+            // Si hay una partida en fase de apuesta, incluir al nuevo jugador
+            if ($partidaEnApuesta) {
+                PartidaUser::create([
+                    'partida_id'    => $partidaEnApuesta->id,
+                    'user_id'       => $user->id,
+                    'apuesta_total' => 0,
+                    'mano_usuario'  => [],
+                    'estado'        => 'apostando',
+                ]);
+            }
         });
 
         broadcast(new PlayerJoinedRoom($sala, $user, $seat))->toOthers();
@@ -120,31 +151,32 @@ class SalaController extends Controller
      */
     public function leave(Sala $sala): JsonResponse
     {
-        $user = Auth::user();
+        $user    = Auth::user();
+        $isOwner = $sala->owner_id === $user->id;
 
-        if (! $sala->hasPlayer($user->id)) {
-            return response()->json(['message' => 'No estás en esta sala.'], 422);
-        }
-
-        DB::transaction(function () use ($sala, $user) {
+        DB::transaction(function () use ($sala, $user, $isOwner) {
             $sala->players()->detach($user->id);
 
-            if ($sala->owner_id === $user->id) {
+            if ($isOwner) {
                 $next = $sala->activePlayers()->first();
                 if ($next) {
                     $sala->update(['owner_id' => $next->id]);
                 } else {
-                    $sala->delete();
+                    // Sin jugadores → cerrar sala y desconectar a todos
+                    $sala->players()->detach();
+                    $sala->update(['status' => 'finished']);
                 }
             }
         });
 
-        if (! $sala->exists) {
-            return response()->json(['message' => 'Sala eliminada (estaba vacía).']);
+        $sala->refresh();
+
+        if ($sala->status === 'finished') {
+            return response()->json(['closed' => true, 'message' => 'Sala cerrada.']);
         }
 
         broadcast(new PlayerLeftRoom($sala, $user))->toOthers();
 
-        return response()->json(['message' => 'Has salido de la sala.']);
+        return response()->json(['closed' => false, 'message' => 'Has salido de la sala.']);
     }
 }
