@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Skin;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\StoreSkinRequest;
 use App\Http\Requests\UpdateSkinRequest;
 use App\Http\Resources\SkinResource;
@@ -110,6 +111,16 @@ public function store(StoreSkinRequest $request)
         $skin = Skin::with('media')->find($request->id);
 
         return new SkinResource($skin);
+    }
+
+    /**
+     * El usuario autenticado activa una skin como su dorso de cartas.
+     */
+    public function activate(Skin $skin)
+    {
+        Auth::user()->update(['active_skin' => $skin->id]);
+
+        return response()->json(['message' => 'Skin activada.', 'active_skin_id' => $skin->id]);
     }
 
     /**
