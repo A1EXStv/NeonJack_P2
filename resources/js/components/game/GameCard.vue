@@ -29,16 +29,17 @@
     </template>
 
     <template v-else>
-      <!-- Card back: skin image or default pattern -->
+      <!-- Card back with skin image -->
       <img
         v-if="skinImageUrl"
         :src="skinImageUrl"
-        class="w-full h-full object-cover"
-        alt="Dorso"
+        style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;"
       />
-      <div v-else class="w-full h-full bg-blue-900 flex items-center justify-center p-1.5">
+      <!-- Card back fallback -->
+      <div v-else class="absolute inset-0 flex items-center justify-center">
         <div
-          class="border-2 border-blue-400 rounded w-full h-full flex items-center justify-center"
+          class="border-2 border-blue-400 rounded"
+          style="width:78%;height:78%;display:flex;align-items:center;justify-content:center;"
         >
           <span class="text-blue-300 font-bold" :class="rankClass">♠</span>
         </div>
@@ -67,17 +68,37 @@ const isRed = computed(() => ['hearts', 'diamonds'].includes(props.card?.palo));
 const textColor = computed(() => (isRed.value ? 'text-red-600' : 'text-gray-900'));
 
 const CARD_SIZES = {
-  sm: { width: '42px', height: '60px' },
-  md: { width: '56px', height: '80px' },
-  lg: { width: '72px', height: '102px' },
+  sm: { width: '52px',  height: '74px'  },
+  md: { width: '68px',  height: '96px'  },
+  lg: { width: '90px',  height: '128px' },
 };
 
-const cardStyle = computed(() => ({
-  width: CARD_SIZES[props.size]?.width ?? '56px',
-  height: CARD_SIZES[props.size]?.height ?? '80px',
-  backgroundColor: props.faceDown ? 'transparent' : 'white',
-  border: '1.5px solid rgba(0,0,0,0.18)',
-}));
+const cardStyle = computed(() => {
+  const base = {
+    width:  CARD_SIZES[props.size]?.width  ?? '56px',
+    height: CARD_SIZES[props.size]?.height ?? '80px',
+  };
+  if (props.faceDown && props.skinImageUrl) {
+    return {
+      ...base,
+      backgroundImage:    `url('${props.skinImageUrl}')`,
+      backgroundSize:     'cover',
+      backgroundPosition: 'center',
+      backgroundRepeat:   'no-repeat',
+    };
+  }
+  if (props.faceDown) {
+    return {
+      ...base,
+      backgroundColor: '#1e3a8a',
+    };
+  }
+  return {
+    ...base,
+    backgroundColor: 'white',
+    border: '1.5px solid rgba(0,0,0,0.18)',
+  };
+});
 
 const rankClass = computed(
   () => ({ sm: 'text-xs', md: 'text-sm', lg: 'text-base' }[props.size] ?? 'text-sm'),

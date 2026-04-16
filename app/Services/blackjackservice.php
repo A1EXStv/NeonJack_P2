@@ -109,6 +109,9 @@ class BlackjackService
             'estado'        => 'esperando',
         ]);
 
+        // Descontar la apuesta de la wallet del usuario
+        User::where('id', $usuario->id)->decrement('wallet', $apuesta);
+
         // Si todos han apostado, repartir cartas iniciales
         $pendientes = PartidaUsuario::where('partida_id', $partida->id)
             ->where('estado', 'apostando')
@@ -218,6 +221,9 @@ class BlackjackService
             throw new \Exception('La apuesta doblada supera el máximo permitido.');
         }
 
+        // Descontar el extra de la apuesta doblada
+        User::where('id', $usuario->id)->decrement('wallet', $pu->apuesta_total);
+
         $carta = $this->generarBaraja()[0];
         $pu->update(['apuesta_total' => $nuevaApuesta]);
         $pu->agregarCarta($carta);
@@ -270,6 +276,9 @@ class BlackjackService
                 'mano_usuario'  => [$mano[1], $carta2],
                 'estado'        => 'jugando',
             ]);
+
+            // Descontar la apuesta de la segunda mano
+            User::where('id', $usuario->id)->decrement('wallet', $pu->apuesta_total);
             broadcast(new CardDealt($partida->sala, $usuario->id, $carta2))->toOthers();
         });
 
@@ -323,10 +332,15 @@ class BlackjackService
                 $balance = $this->calcularBalance($resultado, $apuesta);
 
                 $pu->update([
-                    'resultado'       => $resultado,
+                    'resultado'         => $resultado,
                     'balance_resultado' => $balance,
-                    'estado'          => 'finalizado',
+                    'estado'            => 'finalizado',
                 ]);
+
+                // Devolver apuesta + ganancias a la wallet (la apuesta ya fue descontada al apostar)
+                // balance: +apuesta (gana), +apuesta*1.5 (blackjack), 0 (empata), -apuesta (pierde)
+                // → devolvemos: apuesta + balance (en pierde queda 0; en empate se devuelve la apuesta)
+                User::where('id', $pu->user_id)->increment('wallet', $apuesta + $balance);
 
                 // Registrar en tabla manos (resumen contable)
                 Mano::create([
