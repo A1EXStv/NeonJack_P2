@@ -8,21 +8,33 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
-                <a class="logo navbar-brand mx-auto mx-lg-0" href="#"><img src="/images/logoSinFondo.png"
+                <a class="logo navbar-brand mx-auto mx-lg-0" href="/"><img src="/images/logoSinFondo.png"
                         alt="Logo"></a>
                 <div class="menu-center d-none d-lg-flex">
                     <ul class="navbar-nav gap-5">
-                        <li class="nav-item"><a class="nav-link" href="#">Reglas</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#">Inicio</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#">Tienda</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/rules">Reglas</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/">Inicio</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/shop">Tienda</a></li>
                     </ul>
                 </div>
-                <a href="/login">
-                    <svg class="user-icon ms-auto" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
-                        <path
-                            d="M144 128a80 80 0 1 1 160 0 80 80 0 1 1 -160 0zm208 0a128 128 0 1 0 -256 0 128 128 0 1 0 256 0zM48 480c0-70.7 57.3-128 128-128l96 0c70.7 0 128 57.3 128 128l0 8c0 13.3 10.7 24 24 24s24-10.7 24-24l0-8c0-97.2-78.8-176-176-176l-96 0C78.8 304 0 382.8 0 480l0 8c0 13.3 10.7 24 24 24s24-10.7 24-24l0-8z" />
-                    </svg>
-                </a>
+                <div class="d-flex align-items-center">
+                    <ul>
+                        <li></li>
+                    </ul>
+                    <router-link v-if="!isLogged" to="/login">
+                        <svg class="user-icon ms-auto" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                            <path d="M144 128a80 80 0 1 1 160 0 80 80 0 1 1 -160 0zm208 0a128 128 0 1 0 -256 0 128 128 0 1 0 256 0zM48 480c0-70.7 57.3-128 128-128l96 0c70.7 0 128 57.3 128 128l0 8c0 13.3 10.7 24 24 24s24-10.7 24-24l0-8c0-97.2-78.8-176-176-176l-96 0C78.8 304 0 382.8 0 480l0 8c0 13.3 10.7 24 24 24s24-10.7 24-24l0-8z"/>
+                        </svg>
+                    </router-link>
+
+                    <!-- Usuario logueado -->
+                    <router-link v-else to="/app/profile">
+                        <svg class="user-icon ms-auto" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                            <path d="M144 128a80 80 0 1 1 160 0 80 80 0 1 1 -160 0zm208 0a128 128 0 1 0 -256 0 128 128 0 1 0 256 0zM48 480c0-70.7 57.3-128 128-128l96 0c70.7 0 128 57.3 128 128l0 8c0 13.3 10.7 24 24 24s24-10.7 24-24l0-8c0-97.2-78.8-176-176-176l-96 0C78.8 304 0 382.8 0 480l0 8c0 13.3 10.7 24 24 24s24-10.7 24-24l0-8z"/>
+                        </svg>
+                    </router-link>
+                </div>
+                <!-- Usuario NO logueado -->
             </div>
         </nav>
 
@@ -45,7 +57,13 @@
         
 </template>
 <script setup>
+import { computed } from 'vue'
 import FooterLayout from './FooterLayout.vue'
+import { authStore } from '@/store/auth'
+
+const auth = authStore()
+
+const isLogged = computed(() => auth.authenticated)
 </script>
 <style scoped>
 .custom-navbar {

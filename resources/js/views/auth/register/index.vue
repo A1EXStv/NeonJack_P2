@@ -208,7 +208,7 @@
 
 <script setup>
 import useAuth from '@/composables/auth';
-import BotonesPrincipal from '../../../components/botones-principal.vue';
+import BotonesPrincipal from '@/components/BotonesPrincipal.vue';
 
 const { registerForm, validationErrors, processing, submitRegister } = useAuth();
 </script>
