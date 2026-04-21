@@ -4,6 +4,7 @@ const AuthenticatedLayout = () => import('../layouts/AdminLayout.vue');
 const AuthenticatedUserLayout = () => import('../layouts/UserLayout.vue');
 const GuestLayout = () => import('../layouts/GuestLayout.vue');
 const BlankLayout = () => import('../layouts/BlankLayout.vue');
+const LobbyLayout = () => import('../layouts/LobbyLayout.vue');
 
 async function requireLogin(to, from, next) {
     const auth = authStore();
@@ -97,10 +98,15 @@ export default [
                 name: 'app.profile',
                 path: 'profile',
                 component: () => import('../views/user/profile.vue'),
-                meta: {
-                    breadCrumb: 'Perfil',
-                },
+                meta: { breadCrumb: 'Perfil' },
             },
+        ]
+    },
+    {
+        path: '/app',
+        component: LobbyLayout,
+        beforeEnter: requireLogin,
+        children: [
             {
                 name: 'game.lobby',
                 path: 'salas',
