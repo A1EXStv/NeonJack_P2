@@ -7,10 +7,10 @@
         ]"
     >
         <!-- Sidebar Header -->
-        <div class="flex items-center justify-center p-4 border-b border-gray-100 dark:border-gray-800 shrink-0 transition-all duration-300"
+    <div class="flex items-center  justify-center p-4 border-b border-gray-100 dark:border-gray-800 shrink-0 transition-all duration-300"
              :class="props.isCollapsed ? 'h-16' : 'h-24'">
             <div class="flex items-center gap-3 overflow-hidden whitespace-nowrap transition-all duration-300 w-full justify-center">
-                <img src="/images/logo.svg" alt="Logo" class="transition-all duration-300 object-contain" 
+                <img src="/images/logoSinFondo.png" alt="Logo" class="transition-all duration-300 object-contain" 
                      :class="props.isCollapsed ? 'h-8 w-8' : 'h-16 w-auto max-w-full'"/>
             </div>
         </div>

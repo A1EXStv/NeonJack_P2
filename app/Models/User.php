@@ -31,7 +31,7 @@ class User extends Authenticatable implements HasMedia
         'fecha_nacimiento',
         'alias',
         'wallet',
-        'active_skin_id',
+        'active_skin',
     ];
 
     public function mano()
@@ -45,7 +45,7 @@ class User extends Authenticatable implements HasMedia
 
     public function activeSkin()
     {
-        return $this->belongsTo(Skin::class, 'active_skin_id');
+        return $this->belongsTo(Skin::class, 'active_skin');
     }
 
     public function logros()

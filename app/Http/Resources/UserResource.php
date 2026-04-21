@@ -21,10 +21,14 @@ class UserResource extends JsonResource
             'surname1' => $this->surname1,
             'surname2' => $this->surname2,
             'email' => $this->email,
+            'codigo_postal' => $this->codigo_postal,
+            'direccion' => $this->direccion,
+            'fecha_nacimiento' => $this->fecha_nacimiento,
+            'dni' => $this->dni,
             'roles' => RoleResource::collection($this->roles),
             'avatar' => count($this->getMedia('*')) > 0 ? $this->getMedia('*')[0]->getUrl() : null,
             'wallet' => $this->wallet ?? 0,
-            'active_skin_id' => $this->active_skin_id,
+            'active_skin_id' => $this->active_skin,
             'created_at' => $this->created_at?->toDateString()
         ];
     }

@@ -3,6 +3,7 @@ import { authStore } from "../store/auth";
 const AuthenticatedLayout = () => import('../layouts/AdminLayout.vue');
 const AuthenticatedUserLayout = () => import('../layouts/UserLayout.vue');
 const GuestLayout = () => import('../layouts/GuestLayout.vue');
+const BlankLayout = () => import('../layouts/BlankLayout.vue');
 
 async function requireLogin(to, from, next) {
     const auth = authStore();
@@ -111,6 +112,13 @@ export default [
                 component: () => import('../views/user/game/Lobby.vue'),
                 meta: { breadCrumb: 'Salas', hideBreadcrumb: true },
             },
+        ]
+    },
+    {
+        path: '/app',
+        component: BlankLayout,
+        beforeEnter: requireLogin,
+        children: [
             {
                 name: 'game.table',
                 path: 'game/:salaId/:partidaId',

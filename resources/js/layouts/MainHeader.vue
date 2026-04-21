@@ -27,9 +27,19 @@
 
                 <!-- USER -->
                 <template v-else>
-                    <h1 class="text-lg font-bold">Mi App</h1>
-
-                    <p>Prubaaaaa</p>
+                     <button 
+                        class="lg:hidden flex items-center justify-center w-9 h-9 rounded-lg border header-icon-button"
+                        data-bs-toggle="offcanvas"
+                        data-bs-target="#menu">
+                        <i class="pi pi-bars text-lg"></i>
+                    </button>
+                    <div class="menu-center">
+                        <ul class="nav-list">
+                            <li><a href="#">Reglas</a></li>
+                            <li><a href="#">Inicio</a></li>
+                            <li><a href="#">Tienda</a></li>
+                        </ul>
+                    </div>
                 </template>
 
             </div>
@@ -37,7 +47,10 @@
             <div class="flex items-center gap-2 sm:gap-3">
                 <ul class="flex items-center gap-1.5 sm:gap-2">
                     <li>
-                        <button @click="toggleDarkMode" class="header-icon-button relative flex h-10 w-10 items-center justify-center rounded-lg border transition-all duration-200">
+                        
+                        <button 
+                            @click="toggleDarkMode" 
+                            class="header-icon-button hidden lg:flex items-center justify-center h-10 w-10 rounded-lg border transition-all duration-200">
                             <i :class="isDarkTheme ? 'pi pi-sun' : 'pi pi-moon'" class="text-base"></i>
                         </button>
                     </li>
@@ -98,6 +111,21 @@
             </div>
         </div>
     </header>
+    <!-- OFFCANVAS MOBILE -->
+<div class="offcanvas offcanvas-end" tabindex="-1" id="menu">
+    <div class="offcanvas-header">
+        <h5 class="menu-offcanvas">MENU</h5>
+        <button type="button" class="btn-close bg-white" data-bs-dismiss="offcanvas"></button>
+    </div>
+
+    <div class="offcanvas-body">
+        <ul class="nav-list-mobile">
+            <li><a href="#">Reglas</a></li>
+            <li><a href="#">Inicio</a></li>
+            <li><a href="#">Tienda</a></li>
+        </ul>
+    </div>
+</div>
 </template>
 
 <script setup>
@@ -192,7 +220,7 @@ onUnmounted(() => document.removeEventListener('click', handleClickOutside));
    ============================================ */
 .header-dropdown {
     background: white;
-    color: #1e293b;
+    color: #90bbff;
 }
 
 .dropdown-menu-item {
@@ -222,5 +250,25 @@ onUnmounted(() => document.removeEventListener('click', handleClickOutside));
 .dropdown-fade-enter-from, .dropdown-fade-leave-to {
     opacity: 0;
     transform: translateY(-10px);
+}
+
+.menu-center {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.nav-list {
+    display: flex;
+    gap: 40px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-list li a {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
 }
 </style>

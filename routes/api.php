@@ -92,6 +92,8 @@ Route::get('/logs/{log}', [LogController::class, 'show']);
 Route::delete('/logs/{log}', [LogController::class, 'destroy']);
 Route::post('/logs', [LogController::class, 'store']);
  
+// SKINS — activar skin (requiere auth)
+Route::middleware('auth:sanctum')->post('/skins/{skin}/activate', [SkinController::class, 'activate']);
 
 // SALAS (requieren auth — Auth::user() debe estar disponible)
 Route::middleware('auth:sanctum')->group(function () {
