@@ -17,15 +17,15 @@ class RankingController extends Controller
                      ->where('m.model_type', 'App\Models\User')
                      ->where('m.collection_name', 'avatar');
             })
-            ->where('pu.resultado', 'WIN')
+            ->where('pu.resultado', 'gana')
             ->select(
                 'u.id',
                 'u.alias',
-                DB::raw('COUNT(*) as wins'),
+                DB::raw('COUNT(*) as gana'),
                 DB::raw('MAX(m.file_name) as avatar')
             )
             ->groupBy('u.id', 'u.alias')
-            ->orderByDesc('wins')
+            ->orderByDesc('gana')
             ->limit(4)
             ->get();
 
@@ -47,7 +47,7 @@ public function topBeneficio()
             DB::raw('SUM(pu.balance_resultado) as total'),
             DB::raw("MAX(m.file_name) as avatar")
         )
-        ->where('pu.estado', 'FINALIZADA')
+        ->where('pu.estado', 'finalizado')
         ->groupBy('u.id', 'u.alias')
         ->orderByDesc('total')
         ->limit(4)
