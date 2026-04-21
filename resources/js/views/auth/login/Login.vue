@@ -71,13 +71,15 @@
                         </div>
 
                         <!-- Submit Button -->
-                        <BotonesPrincipal
-                            type="submit"
-                            :label="$t('login')"
-                            variant="primary"
-                            :disabled="processing"
-                            @click="submitLogin"
-                        />
+                        <div class="boton-login"> 
+                            <BotonesPrincipal
+                                type="submit"
+                                :label="$t('login')"
+                                variant="primary"
+                                :disabled="processing"
+                                @click="submitLogin"
+                            />
+                        </div>
                         <!-- Register link -->
                         <div class="text-center">
                             <p class="text-sm text-gray-600 dark:text-gray-400">
@@ -99,7 +101,7 @@
 
 <script setup>
 import useAuth from '@/composables/auth';
-import BotonesPrincipal from '../../../components/botones-principal.vue';
+import BotonesPrincipal from '@/components/BotonesPrincipal.vue';
 
 const { loginForm, validationErrors, processing, submitLogin } = useAuth();
 </script>
@@ -144,5 +146,8 @@ const { loginForm, validationErrors, processing, submitLogin } = useAuth();
 
 :deep(.custom-card .p-card-body) {
     background: transparent !important;
+}
+.boton-login button {
+    border-radius: 50px;
 }
 </style>

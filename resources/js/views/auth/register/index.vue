@@ -61,7 +61,6 @@
                             <label for="email" class="font-medium">{{ $t('email') }}</label>
                             <InputText
                                 id="email"
-                                type="email"
                                 v-model="registerForm.email"
                                 placeholder="tu@email.com"
                                 :invalid="!!validationErrors?.email"
@@ -70,7 +69,9 @@
                                 {{ validationErrors.email[0] }}
                             </small>
                         </div>
+                        
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <!----codigo postal---->
                             <div class="flex flex-col gap-2">
                                 <label for="postal_code" class="font-medium">{{ $t('codigo_postal') }}</label>
                                 <InputText
@@ -83,7 +84,7 @@
                                     {{ validationErrors.postal_code[0] }}
                                 </small>
                             </div>
-
+                            <!----dni---->
                             <div class="flex flex-col gap-2">
                                 <label for="dni" class="font-medium">{{ $t('dni') }}</label>
                                 <InputText
@@ -112,18 +113,33 @@
                             </small>
                         </div>
 
-                        <!-- Fecha de nacimiento -->
-                        <div class="flex flex-col gap-2">
-                            <label for="fecha_nacimiento" class="font-medium">{{ $t('fecha_nacimiento') }}</label>
-                            <InputText
-                                id="fecha_nacimiento"
-                                type="date"
-                                v-model="registerForm.fecha_nacimiento"
-                                :invalid="!!validationErrors?.fecha_nacimiento"
-                            />
-                            <small v-if="validationErrors?.fecha_nacimiento" class="text-red-500">
-                                {{ validationErrors.fecha_nacimiento[0] }}
-                            </small>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <!-- Fecha de nacimiento -->
+                            <div class="flex flex-col gap-2">
+                                <label for="fecha_nacimiento" class="font-medium">{{ $t('fecha_nacimiento') }}</label>
+                                <InputText
+                                    id="fecha_nacimiento"
+                                    type="date"
+                                    v-model="registerForm.fecha_nacimiento"
+                                    :invalid="!!validationErrors?.fecha_nacimiento"
+                                />
+                                <small v-if="validationErrors?.fecha_nacimiento" class="text-red-500">
+                                    {{ validationErrors.fecha_nacimiento[0] }}
+                                </small>
+                            </div>
+                            <!----alias---->
+                            <div class="flex flex-col gap-2">
+                                <label for="alias" class="font-medium">{{ $t('alias') }}</label>
+                                <InputText
+                                    id="alias"
+                                    v-model="registerForm.alias"
+                                    placeholder="Alias"
+                                    :invalid="!!validationErrors?.alias"
+                                />
+                                <small v-if="validationErrors?.alias" class="text-red-500">
+                                    {{ validationErrors.alias[0] }}
+                                </small>
+                            </div>
                         </div>
 
                         <!-- Password y Confirm Password -->
@@ -192,7 +208,7 @@
 
 <script setup>
 import useAuth from '@/composables/auth';
-import BotonesPrincipal from '../../../components/botones-principal.vue';
+import BotonesPrincipal from '@/components/BotonesPrincipal.vue';
 
 const { registerForm, validationErrors, processing, submitRegister } = useAuth();
 </script>

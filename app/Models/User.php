@@ -29,6 +29,7 @@ class User extends Authenticatable implements HasMedia
         'dni',
         'direccion',
         'fecha_nacimiento',
+        'alias',
         'wallet',
         'active_skin',
     ];

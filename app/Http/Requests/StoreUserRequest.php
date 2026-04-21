@@ -31,6 +31,7 @@ class StoreUserRequest extends FormRequest
             'dni' => ['required', 'string', 'max:20', 'unique:users'],
             'direccion' => ['required', 'string', 'max:255'],
             'fecha_nacimiento' => ['required', 'date', 'max:255'],
+            'alias' => ['nullable', 'string', 'max:255', 'unique:users'],
         ];
     }
 }
