@@ -157,11 +157,11 @@ const filters = ref({
 
 // Helpers de diseño
 const getTipoSeverity = (tipo) => {
-    return tipo === 'deposit' ? 'success' : 'danger';
+    return tipo === 'deposito' ? 'success' : 'danger';
 };
 
 const getAmountClass = (tipo) => {
-    return tipo === 'deposit' ? 'text-green-600' : 'text-red-600';
+    return tipo === 'deposito' ? 'text-green-600' : 'text-red-600';
 };
 
 const formatCurrency = (value) => {

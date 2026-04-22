@@ -95,8 +95,8 @@ const { transaccion, storeTransaccion, resetTransaccion, hasError, getError, isL
 
 const usuariosList = ref([]);
 const tiposOpciones = [
-    { label: 'Depósito', value: 'deposit' },
-    { label: 'Retiro', value: 'withdrawal' },
+    { label: 'Depósito', value: 'deposito' },
+    { label: 'Retiro', value: 'retirada' },
 ];
 
 const fetchUsers = async () => {
@@ -124,7 +124,7 @@ onMounted(() => {
 });
 
 const getHelpText = (tipo) => {
-    return tipo === 'deposit' ? 'Aumentará el saldo del usuario.' : 'Se descontará del saldo del usuario.';
+    return tipo === 'deposito' ? 'Aumentará el saldo del usuario.' : 'Se descontará del saldo del usuario.';
 };
 
 const close = () => {
