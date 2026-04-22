@@ -1,5 +1,5 @@
 <template>
-    <div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8" style="background-color: #110c22;">
+    <div class="min-h-screen mt-25 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8" style="background-color: #110c22;">
         <div class="max-w-2xl w-full">
             <!-- Logo y título -->
             <div class="text-center mb-8">
@@ -178,14 +178,16 @@
                         </div>
 
                         <!-- Submit Button -->
-                        <BotonesPrincipal
-                            type="submit"
-                            :label="$t('register')"
-                            :loading="processing"
-                            :disabled="processing"
-                            class="w-full"
-                            size="large" 
-                        />
+                        <div class="boton-register button">
+                            <BotonesPrincipal
+                                type="submit"
+                                :label="$t('register')"
+                                :loading="processing"
+                                :disabled="processing"
+                                class="w-full"
+                                size="large" 
+                            />
+                        </div>
 
                         <!-- Login link -->
                         <div class="text-center">
@@ -223,5 +225,8 @@ const { registerForm, validationErrors, processing, submitRegister } = useAuth()
 
 :deep(.custom-card .p-card-body) {
     background: transparent !important;
+}
+.boton-register button {
+    border-radius: 50px;
 }
 </style>
