@@ -9,14 +9,27 @@ export default function useTransacciones() {
   const isLoading = ref(false)
   const toast = useToast()
 
-  const initialTransaccion = { id: null, user_id: null, tipo: 'deposit', cantidad: 0 }
+  const initialTransaccion = { id: null, user_id: null, tipo: 'deposito', cantidad: 0 }
   const transaccion = ref({ ...initialTransaccion })
 
-  const { errors, validate, handleRequestError, clearErrors, hasError, getError } = useValidation()
+  const { errors, validate, setFieldError, clearErrors, hasError, getError } = useValidation()
+
+  const handleRequestError = (error) => {
+    const status = error?.response?.status
+    const message = error?.response?.data?.message ?? 'Error inesperado'
+    if (status === 422) {
+      const serverErrors = error.response.data.errors ?? {}
+      Object.entries(serverErrors).forEach(([field, messages]) => {
+        setFieldError(field, Array.isArray(messages) ? messages[0] : messages)
+      })
+    } else {
+      toast.error('Error', message)
+    }
+  }
 
   const transaccionSchema = yup.object({
     user_id: yup.mixed().required('Debes seleccionar un usuario'),
-    tipo: yup.string().oneOf(['deposit', 'withdrawal']).required('El tipo es obligatorio'),
+    tipo: yup.string().oneOf(['deposito', 'retirada']).required('El tipo es obligatorio'),
     cantidad: yup.number().typeError('Debe ser un número').positive('Mayor a 0').required('Requerido')
   })
 
@@ -31,13 +44,16 @@ export default function useTransacciones() {
     clearErrors()
     const { isValid } = await validate(transaccionSchema, transaccion.value)
     if (!isValid) return false
+    isLoading.value = true
     try {
       const response = await axios.post('/api/transacciones', transaccion.value)
-      toast.success('Éxito', 'Creado');
+      toast.success('Éxito', 'Transacción registrada')
       return response.data
     } catch (error) {
-      handleRequestError(error);
+      handleRequestError(error)
       return false
+    } finally {
+      isLoading.value = false
     }
   }
 

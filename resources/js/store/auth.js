@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { ref } from "vue";
 import { defineStore } from "pinia";
+import { useWalletStore } from '@/store/wallet';
 
 export const authStore = defineStore("authStore", () => {
 
@@ -11,6 +12,7 @@ export const authStore = defineStore("authStore", () => {
         axios.get('/api/user').then(response => {
             user.value = response.data.data
             authenticated.value = true
+            useWalletStore().syncFromGame(response.data.data?.wallet ?? 0)
         }).catch(error => {
             user.value = {}
             authenticated.value = false
@@ -21,6 +23,7 @@ export const authStore = defineStore("authStore", () => {
         await axios.get('/api/user').then(response => {
             user.value = response.data.data
             authenticated.value = true
+            useWalletStore().syncFromGame(response.data.data?.wallet ?? 0)
             console.log('getUser AT: true ');
             console.log(user.value);
         }).catch(error => {
@@ -34,6 +37,7 @@ export const authStore = defineStore("authStore", () => {
         await axios.get('/api/user/signin').then(response => {
             user.value = response.data.data
             authenticated.value = true
+            useWalletStore().syncFromGame(response.data.data?.wallet ?? 0)
         }).catch(error => {
             console.log('getUserSignIn: error ');
             user.value = {}
@@ -43,6 +47,7 @@ export const authStore = defineStore("authStore", () => {
     function logout() {
         user.value = {}
         authenticated.value = false
+        useWalletStore().reset()
     }
 
     function is(roleName) {
