@@ -15,7 +15,7 @@
                 <div class="menu-center d-none d-lg-flex">
                     <ul class="navbar-nav gap-5">
                         <li class="nav-item"><router-link class="nav-link" to="/reglas">Reglas</router-link></li>
-                        <li class="nav-item"><router-link class="nav-link" to="/">Inicio</router-link></li>
+                        <li class="nav-item"><router-link class="nav-link" to="/app">Inicio</router-link></li>
                         <li class="nav-item"><router-link class="nav-link" to="/tienda">Tienda</router-link></li>
                     </ul>
                 </div>
@@ -29,7 +29,7 @@
             </div>
         </nav>
         <!----Menu lateral-->
-        <aside class="custom-sidebar">
+        <aside v-if="!route.meta.hideSidebar" class="custom-sidebar">
             <!--Avatar-->
             <div class="sidebar-inner">
                 <div class="sidebar-user">
@@ -85,10 +85,11 @@
 import FooterLayout from './FooterLayout.vue'
 import { authStore } from "@/store/auth";
 import Avatar from "primevue/avatar";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 
 const auth = authStore();
 const router = useRouter();
+const route = useRoute();
 
 const handleLogout = async () => {
     await auth.logout(); 
