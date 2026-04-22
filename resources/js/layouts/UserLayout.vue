@@ -14,8 +14,8 @@
 
                 <div class="menu-center d-none d-lg-flex">
                     <ul class="navbar-nav gap-5">
-                        <li class="nav-item"><router-link class="nav-link" to="/reglas">Reglas</router-link></li>
-                        <li class="nav-item"><router-link class="nav-link" to="/">Inicio</router-link></li>
+                        <li class="nav-item"><router-link class="nav-link" to="/rules">Reglas</router-link></li>
+                        <li class="nav-item"><router-link class="nav-link" to="/app">Inicio</router-link></li>
                         <li class="nav-item"><router-link class="nav-link" to="/shop">Tienda</router-link></li>
                     </ul>
                 </div>
