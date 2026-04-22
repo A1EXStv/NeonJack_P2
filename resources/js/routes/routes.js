@@ -65,6 +65,11 @@ export default [
                 beforeEnter: guest,
             },
             {
+                path: 'rules',
+                name: 'rules',
+                component: () => import('../views/public/rules/index.vue'),
+            },
+            {
                 path: 'shop',
                 name: 'shop',
                 component: () => import('../views/user/shop/index.vue'),
