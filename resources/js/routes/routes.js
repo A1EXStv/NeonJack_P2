@@ -25,7 +25,7 @@ async function guest(to, from, next) {
     let isLogin = !!auth.authenticated;
 
     if (isLogin) {
-        next('/')
+        next('/app')
     } else {
         next()
     }
@@ -99,6 +99,12 @@ export default [
         beforeEnter: requireLogin,
         meta: { breadCrumb: '.' },
         children: [
+            {
+                name: 'app.home',
+                path: '',
+                component: () => import('../views/user/home/index.vue'),
+                meta: { hideSidebar: true },
+            },
             {
                 name: 'app.profile',
                 path: 'profile',
