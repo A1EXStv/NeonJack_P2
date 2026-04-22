@@ -55,7 +55,7 @@
             </div>
         </div>
         <div class="d-flex justify-content-center align-items-center p-4">
-            <a class="btn btn-primary " href="#">¡CONSIGUE TU CARTA AHORA!</a>
+            <a class="btn btn-primary " href="/shop">¡CONSIGUE TU CARTA AHORA!</a>
         </div>
     </section>
     <section class="pb-4">
