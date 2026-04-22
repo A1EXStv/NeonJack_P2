@@ -1,5 +1,5 @@
 <template>
-    <div class="min-h-screen flex items-center justify-center py-8 px-4 sm:px-6 lg:px-8" style="background-color: #110c22;">    
+    <div class="min-h-screen mt-30 flex items-center justify-center py-8 px-4 sm:px-6 lg:px-8" style="background-color: #110c22;">    
         <div class="max-w-md w-full">
             <!-- Logo y título -->
             <div class="text-center mb-8">

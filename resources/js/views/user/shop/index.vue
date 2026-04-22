@@ -39,7 +39,7 @@
                     </div>
                     <div class="card-footer">
                         <h5 class="titulo-carta mt-4">{{ skin.nombre }}</h5>
-                        <p class=" mt-1">{{ skin.precio }} €</p>
+                        <p class=" mt-1">{{ skin.precio }}F</p>
                         <!-- Submit Button -->
                         <BotonesPrincipal
                             :label="`Comprar `"
@@ -83,7 +83,7 @@ onMounted(async () => {
 <style scoped>
 #header {
     padding-top: 44px;
-    height: 550px;
+    height: 500px;
     background-image: linear-gradient(to bottom,rgba(126,82,144,0) 60%,#110c22 100%),url(/images/header_tienda.png);
     background-size: cover;
     background-position: 50% 40%;
@@ -130,8 +130,7 @@ onMounted(async () => {
 
 .glass-container {
     position: relative;
-
-    background: rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.04);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border-radius: 20px;
