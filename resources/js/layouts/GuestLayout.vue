@@ -13,7 +13,7 @@
                 <div class="menu-center d-none d-lg-flex">
                     <ul class="navbar-nav gap-5">
                         <li class="nav-item"><a class="nav-link" href="/rules">Reglas</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/">Inicio</a></li>
+                        <li class="nav-item"><router-link class="nav-link" :to="isLogged ? '/app' : '/'">Inicio</router-link></li>
                         <li class="nav-item"><a class="nav-link" href="/shop">Tienda</a></li>
                     </ul>
                 </div>

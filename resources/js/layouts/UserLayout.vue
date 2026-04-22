@@ -14,7 +14,7 @@
 
                 <div class="menu-center d-none d-lg-flex">
                     <ul class="navbar-nav gap-5">
-                        <li class="nav-item"><router-link class="nav-link" to="/reglas">Reglas</router-link></li>
+                        <li class="nav-item"><router-link class="nav-link" to="/rules">Reglas</router-link></li>
                         <li class="nav-item"><router-link class="nav-link" to="/app">Inicio</router-link></li>
                         <li class="nav-item"><router-link class="nav-link" to="/tienda">Tienda</router-link></li>
                     </ul>
@@ -66,7 +66,7 @@
             </div>
             <div class="offcanvas-body">
                 <ul class="navbar-nav">
-                    <li class="nav-item"><router-link class="nav-link" to="/">INICIO</router-link></li>
+                    <li class="nav-item"><router-link class="nav-link" to="/app">INICIO</router-link></li>
                     <li class="nav-item"><router-link class="nav-link" to="/app/posts">POSTS</router-link></li>
                     <li class="nav-item"><router-link class="nav-link" to="/app/profile">MI PERFIL</router-link></li>
                 </ul>
