@@ -2,12 +2,14 @@ import { ref, computed, watch, onMounted, onUnmounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import axios from 'axios';
 import { authStore } from '@/store/auth';
+import { useWalletStore } from '@/store/wallet';
 
 export function useGame() {
-  const route    = useRoute();
-  const router   = useRouter();
-  const auth     = authStore();
-  const authUser = auth.user;
+  const route      = useRoute();
+  const router     = useRouter();
+  const auth       = authStore();
+  const authUser   = auth.user;
+  const walletStore = useWalletStore();
 
   // ── State ────────────────────────────────────────────────────
   const gameState  = ref(null);
@@ -103,9 +105,11 @@ export function useGame() {
     pierde:    'background:#b91c1c;color:white',
   }[myResult.value] ?? 'background:rgba(255,255,255,0.15);color:white'));
 
-  // Wallet live desde el estado del juego (se actualiza con el polling),
-  // con fallback al store (que ahora también incluye wallet tras el fix en UserResource)
-  const wallet = computed(() => myPU.value?.usuario?.wallet ?? authUser.wallet ?? 0);
+  // Wallet live: el polling actualiza el walletStore, todos los componentes reaccionan
+  const wallet = computed(() => walletStore.balance);
+  watch(() => myPU.value?.usuario?.wallet, (newWallet) => {
+    walletStore.syncFromGame(newWallet);
+  });
 
   // ── Timer helpers ─────────────────────────────────────────────
   const timerColor = (val, max) => {
