@@ -70,7 +70,7 @@ export default function useAuth() {
                 if (role === 'admin') {
                     await router.push({ name: 'admin.index' })
                 } else {
-                    await router.push({ name: 'app.profile' })
+                    await router.push({ name: 'app.home' })
                 }
             })
             .catch(error => {

@@ -30,6 +30,7 @@
               label="Crear sala"
               icon="pi pi-plus"
               size="small"
+              class="btn-brand"
               @click="showCreateDialog = true"
             />
           </div>
@@ -50,10 +51,8 @@
           <div
             v-for="sala in salas"
             :key="sala.id"
-            class="border rounded-xl p-4 flex flex-col gap-3 transition-all hover:shadow-md"
-            :class="isPlayerInSala(sala)
-              ? 'border-green-400 dark:border-green-600 bg-green-50/30 dark:bg-green-900/10'
-              : 'border-surface-200 dark:border-surface-700'"
+            class="sala-card border rounded-xl p-4 flex flex-col gap-3 transition-all"
+            :class="isPlayerInSala(sala) ? 'sala-card-mine' : ''"
           >
             <!-- Sala header -->
             <div class="flex items-start justify-between gap-2">
@@ -85,8 +84,7 @@
                 label="Entrar al juego"
                 icon="pi pi-play"
                 size="small"
-                severity="success"
-                class="flex-1"
+                class="flex-1 btn-brand"
                 :loading="enteringId === sala.id"
                 @click="enterGame(sala)"
               />
@@ -98,8 +96,7 @@
                   label="Iniciar partida"
                   icon="pi pi-play"
                   size="small"
-                  severity="success"
-                  class="flex-1"
+                  class="flex-1 btn-brand"
                   :loading="startingId === sala.id"
                   @click="startGame(sala)"
                 />
@@ -120,8 +117,7 @@
                 :label="sala.status === 'playing' ? 'Unirse (apostando)' : 'Unirse'"
                 :icon="sala.status === 'playing' ? 'pi pi-bolt' : 'pi pi-user-plus'"
                 size="small"
-                :severity="sala.status === 'playing' ? 'warn' : 'primary'"
-                class="flex-1"
+                class="flex-1 btn-brand"
                 :loading="joiningId === sala.id"
                 @click="joinSala(sala)"
               />
@@ -182,6 +178,7 @@
         <Button
           label="Crear"
           icon="pi pi-check"
+          class="btn-brand"
           :loading="creating"
           :disabled="!newSala.nombre_sala.trim()"
           @click="createSala"
@@ -308,3 +305,57 @@ onUnmounted(() => {
   clearInterval(pollTimer);
 });
 </script>
+
+<style scoped>
+/* ── Card principal ───────────────────────────────── */
+:deep(.p-card) {
+  background: #150f2d !important;
+  border: 1px solid rgba(255, 255, 255, 0.07) !important;
+  border-radius: 14px !important;
+  color: rgba(255, 255, 255, 0.85) !important;
+}
+:deep(.p-card-title) {
+  color: rgba(255, 255, 255, 0.9) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  padding-bottom: 0.75rem;
+}
+:deep(.p-card-body) {
+  padding: 1.25rem !important;
+}
+
+/* ── Cards de sala ────────────────────────────────── */
+.sala-card {
+  background: #0f0c1e;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+  color: rgba(255, 255, 255, 0.85);
+}
+.sala-card:hover {
+  border-color: rgba(156, 92, 203, 0.35) !important;
+  box-shadow: 0 4px 20px rgba(156, 92, 203, 0.1);
+}
+.sala-card-mine {
+  border-color: rgba(156, 92, 203, 0.4) !important;
+  background: rgba(156, 92, 203, 0.06) !important;
+}
+:deep(.sala-card .font-bold) {
+  color: #fff !important;
+}
+:deep(.sala-card .text-surface-400),
+:deep(.sala-card .text-surface-500) {
+  color: rgba(255, 255, 255, 0.4) !important;
+}
+:deep(.sala-card .border-t) {
+  border-color: rgba(255, 255, 255, 0.07) !important;
+}
+
+/* ── Botones de acción principales ───────────────── */
+:deep(.btn-brand.p-button) {
+  background: linear-gradient(90deg, #9C5CCB, #818AC8, #3BC3DB) !important;
+  border: none !important;
+  color: #fff !important;
+}
+:deep(.btn-brand.p-button:hover) {
+  opacity: 0.88;
+  background: linear-gradient(90deg, #9C5CCB, #818AC8, #3BC3DB) !important;
+}
+</style>

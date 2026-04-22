@@ -6,6 +6,7 @@ use App\http\Controllers\Controller;
 use App\Models\Transaccion;
 use App\Models\Ajustes;
 use App\Models\Cartera;
+use App\Models\User;
 // use App\Http\Controllers\Api\AjustesController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -41,7 +42,7 @@ class TransaccionController extends Controller
         $fichas = $data['cantidad'] * $conversion;
 
         if ($data['tipo'] === 'retirada') {
-            $saldoActual = Cartera::where('user_id', $data['user_id'])->sum('cantidad');
+            $saldoActual = User::find($data['user_id'])?->wallet ?? 0;
 
             if ($saldoActual < $fichas) {
                 return response()->json([
@@ -60,6 +61,13 @@ class TransaccionController extends Controller
                 'tipoMovimiento' => $data['tipo'] === 'deposito' ? 'deposito' : 'retiro',
                 'concepto'       => $data['tipo'] === 'deposito' ? 'Depósito en euros' : 'Retirada en euros',
             ]);
+
+            $user = User::find($data['user_id']);
+            if ($data['tipo'] === 'deposito') {
+                $user->increment('wallet', $fichas);
+            } else {
+                $user->decrement('wallet', $fichas);
+            }
 
             return $transaccion;
         });
