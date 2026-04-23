@@ -39,11 +39,14 @@
                     </div>
                     <div class="card-footer">
                         <h5 class="titulo-carta mt-4">{{ skin.nombre }}</h5>
-                        <p class=" mt-1">{{ skin.precio }}F</p>
+                        <div class=" d-flex align-items-center justify-content-center ">
+                            <p class=" mt-1">{{ skin.precio }}</p>
+                            <img src="/images/dado.svg"  width=20px alt="Dado">
+                        </div>
                         <!-- Submit Button -->
                         <BotonesPrincipal
                             :label="`Comprar `"
-                            @click="comprarSkin(skin)"
+                            @click="buySkin(skin.id, skin.precio)"
                         />
                     </div>
                 </div>
@@ -55,6 +58,8 @@
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
 import BotonesPrincipal from '@/components/BotonesPrincipal.vue';
+import { authStore } from '@/store/auth'
+const auth = authStore()
 
 const skins = ref([])
 
@@ -78,6 +83,22 @@ onMounted(async () => {
         loading.value = false
     }
 })
+const buySkin = async (skinId, price) => {
+    try {
+        const res = await axios.post('/api/buy-skin', {
+            skin_id: skinId
+        })
+
+        // actualizar balance
+        auth.user.wallet = res.data.wallet
+
+        // opcional: feedback
+        alert('Skin comprada con éxito!')
+
+    } catch (error) {
+        alert(error.response?.data?.message || 'Error al comprar')
+    }
+}
 </script>
 
 <style scoped>

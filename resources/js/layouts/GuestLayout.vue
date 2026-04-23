@@ -8,7 +8,7 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
-                <a class="logo navbar-brand mx-auto mx-lg-0" href="/"><img src="/images/logoSinFondo.png"
+                <a class="logo navbar-brand mx-auto mx-lg-0" href="/"><img src="/images/logo_sin_fondo.webp"
                         alt="Logo"></a>
                 <div class="menu-center d-none d-lg-flex">
                     <ul class="navbar-nav gap-5">
@@ -19,7 +19,7 @@
                 </div>
                 <div class="d-flex align-items-center">
                     <ul>
-                        <li></li>
+                        <li v-if="isLogged">{{ balance }} F</li>
                     </ul>
                     <router-link v-if="!isLogged" to="/login">
                         <svg class="user-icon ms-auto" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
@@ -63,6 +63,7 @@ import { authStore } from '@/store/auth'
 
 const auth = authStore()
 
+const balance = computed(() => auth.user?.wallet || 0)
 const isLogged = computed(() => auth.authenticated)
 </script>
 <style scoped>

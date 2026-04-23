@@ -40,7 +40,7 @@ class User extends Authenticatable implements HasMedia
     }
     public function skins()
     {
-        return $this->belongsToMany(Skin::class, 'skin_user');
+        return $this->belongsToMany(Skin::class, 'skin_usuario');
     }
 
     public function activeSkin()
@@ -105,4 +105,5 @@ class User extends Authenticatable implements HasMedia
                 ->height(env('IMAGE_HEIGHT', 300));
         }
     }
+    
 }

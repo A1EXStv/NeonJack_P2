@@ -20,7 +20,7 @@ class Skin extends Model implements HasMedia
 
     public function users()
     {
-        return $this->belongsToMany(User::class, 'skin_user');
+        return $this->belongsToMany(User::class, 'skin_usuario');
     }
 
     public function registerMediaCollections(): void
