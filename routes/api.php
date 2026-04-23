@@ -77,6 +77,7 @@ Route::get('/skins/{skin}', [SkinController::class, 'show']);
 Route::delete('/skins/{skin}', [SkinController::class, 'destroy']);
 Route::put('/skins/{skin}', [SkinController::class, 'update']);
 Route::post('/skins/updateimg', [SkinController::class, 'updateimg']);
+Route::middleware('auth:sanctum')->post('/buy-skin', [UserController::class, 'buy']);
 
 // LOGROS
 Route::get('/logros', [LogroController::class, 'index']);

@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\Role;
 use Illuminate\Http\Request;
+use App\Models\Skin;
 
 
 class UserController extends Controller
@@ -160,5 +161,31 @@ class UserController extends Controller
         return response()->noContent();
     }
 
+    public function buy(Request $request)
+    {
+        $user = auth()->user();
+        $skin = Skin::findOrFail($request->skin_id);
+
+        DB::transaction(function () use ($user, $skin) {
+
+            if ($user->skins()->where('skin_id', $skin->id)->exists()) {
+                abort(400, 'Ya tienes esta skin');
+            }
+
+            if ($user->wallet < $skin->precio) {
+                abort(400, 'No tienes suficientes fichas');
+            }
+
+            $user->wallet -= $skin->precio;
+            $user->save();
+
+            $user->skins()->syncWithoutDetaching([$skin->id]);
+        });
+
+        return response()->json([
+            'message' => 'Skin comprada',
+            'wallet' => $user->wallet
+        ]);
+    }
 
 }
