@@ -46,9 +46,13 @@
                     <i class="pi pi-user"></i>
                     <span>Perfil</span>
                 </router-link>
-                <router-link to="/app/transactions" class="sidebar-link">
+                <router-link to="/app/transacciones" class="sidebar-link">
                     <i class="pi pi-shopping-cart"></i>
                     <span>Transacciones</span>
+                </router-link>
+                <router-link to="/app/skins" class="sidebar-link">
+                    <i class="pi pi-palette"></i>
+                    <span>Skins</span>
                 </router-link>
                 <div class="sidebar-footer">
                     <button class="btn-logout " @click="handleLogout">
@@ -159,7 +163,7 @@ const handleLogout = async () => {
     top: 140px;    
     left: 60px;  
     width: 260px;
-    height: calc(100vh - 160px);
+    height: 100%;
     z-index: 999;
 }
 

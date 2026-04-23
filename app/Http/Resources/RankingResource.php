@@ -12,7 +12,7 @@ class RankingResource extends JsonResource
     return [
         'id' => $this->id,
         'name' => $this->alias ?? $this->name,
-        'wins' => $this->wins ?? null,
+        'gana' => $this->gana ?? null,
         'total' => $this->total ?? null,
         'avatar' => $this->avatar 
             ? asset('storage/' . $this->avatar)

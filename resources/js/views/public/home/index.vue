@@ -77,7 +77,7 @@
                     <span class="rank fw-bold">{{ index + 1 }}</span>
                     <div class="info d-flex flex-column align-items-center">
                         <span class="name fw-bold">{{ jugador.name.trim() }}</span>
-                        <span class="points">{{ jugador.wins }} rondas</span>
+                        <span class="points">{{jugador.gana}} rondas</span>
                     </div>
                     <img :src="jugador.avatar" alt="Avatar" class="avatar rounded-5">
                 </div>
