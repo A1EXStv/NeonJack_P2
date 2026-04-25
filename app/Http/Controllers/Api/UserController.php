@@ -188,4 +188,15 @@ class UserController extends Controller
         ]);
     }
 
+public function mySkins(Request $request)
+{
+    $user = $request->user();
+
+    $skins = $user->skins()->with('media')->get();
+
+    return response()->json([
+        'data' => $skins
+    ]);
+}
+
 }

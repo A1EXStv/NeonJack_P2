@@ -163,7 +163,7 @@ const handleLogout = async () => {
     top: 140px;    
     left: 60px;  
     width: 260px;
-    height: 100%;
+  /*  height: 100%;*/
     z-index: 999;
 }
 
@@ -173,7 +173,7 @@ const handleLogout = async () => {
     -webkit-backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 7px;
-    min-height: 910px;
+    min-height: 820px;
     padding: 20px;
     display: flex;
     flex-direction: column;

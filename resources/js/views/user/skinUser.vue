@@ -1,53 +1,46 @@
 <template>
     <div class="skins-container">
-
-        <div class="datos-card">
-            <h3 class="card-title"><span>SKINS</span></h3>
-
-            <!-- SKIN ACTIVA -->
-            <div class="active-skin">
-                <h4>Skin equipada</h4>
-
-                <div v-if="activeSkin">
-                    <img :src="activeSkin.image" class="active-img" />
-                    <p>{{ activeSkin.nombre }}</p>
-                </div>
-
-                <p v-else>No tienes ninguna skin equipada</p>
-            </div>
-
-            <hr />
-
-            <!-- LISTA DE SKINS -->
-            <div class="skins-grid">
-
-                <div v-for="skin in skins" :key="skin.id" class="skin-card">
-
-                    <img :src="skin.image" class="skin-img" />
-
-                    <p class="skin-name">{{ skin.nombre }}</p>
-
-                    <button
-                        v-if="activeSkin?.id !== skin.id"
-                        class="btn-primary"
-                        @click="activateSkin(skin.id)"
-                    >
-                        Activar
-                    </button>
-
-                    <button v-else disabled class="btn-active">
-                        Equipada
-                    </button>
-
-                </div>
-
-            </div>
-
+        <div class="titulo-skins text-center">
+            <h2 class="pt-4 pb-5">Colección de Skins</h2>
+        </div>
+        <div v-if="loading" class="text-center text-white">
+            Cargando skins...
         </div>
 
+        <!-- SKINS -->
+        <div v-else class="section2Cartas d-flex justify-content-center align-items-center gap-5 flex-wrap mb-4 ">
+
+            <div v-for="skin in skins" :key="skin.id" class="card-container"
+                :class="{ active: activeSkin?.id === skin.id }">
+                <div class="card-inner">
+
+                    <!-- FRONT -->
+                    <div class="page page1">
+                        <img :src="getImage(skin)" alt="">
+                    </div>
+
+                    <!-- BACK -->
+                    <div class="page page2">
+
+                        <img src="/images/dado.svg" class="dado dado-tl">
+                        <img src="/images/dado.svg" class="dado dado-br">
+
+                        <div class="contenido">
+                            <h2 class="fw-bold titulo-carta">{{ skin.nombre }}</h2>
+                            <p>Skin exclusiva</p>
+                            <button v-if="activeSkin?.id !== skin.id" class="btn-primary"
+                                @click="activateSkin(skin.id)">
+                                Activar
+                            </button>
+
+                            <button v-else class="btn-active">Equipada </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
-
 <script setup>
 import { ref, onMounted } from "vue";
 import { authStore } from "@/store/auth";
@@ -56,114 +49,187 @@ const auth = authStore();
 
 const skins = ref([]);
 const activeSkin = ref(null);
+const loading = ref(true);
 
-// Cargar skins
+const getImage = (skin) => {
+    if (skin.media && skin.media.length > 0) {
+        return skin.media[0].original_url
+    }
+    return '/images/blacjackFondo.png'
+}
+
 const getSkins = async () => {
-    const res = await fetch("/api/skins");
-    const data = await res.json();
-    skins.value = data.data ?? data;
-};
-
-// Skin activa del usuario
-const getActiveSkin = async () => {
-    const res = await fetch("/api/users/" + auth.user.id);
-    const data = await res.json();
-    activeSkin.value = data.data.active_skin;
-};
-
-// Activar skin
-const activateSkin = async (id) => {
-    await fetch(`/api/skins/${id}/activate`, {
-        method: "POST",
+    const res = await fetch("/api/user/skins", {
         headers: {
-            "Authorization": `Bearer ${auth.token}`,
-            "Content-Type": "application/json"
+            "Authorization": `Bearer ${auth.token}`
         }
     });
 
-    await getActiveSkin();
+    const data = await res.json();
+    skins.value = data.data ?? data;
+    console.log("Skins recibidas:", skins.value);
+};
+
+const getActiveSkin = async () => {
+    const res = await fetch("/api/users/" + auth.user.id);
+    const data = await res.json();
+
+    const activeId = data.data.active_skin_id; 
+
+    if (activeId) {
+        activeSkin.value = skins.value.find(s => Number(s.id) === Number(activeId));
+    }
+};
+
+const activateSkin = async (id) => {
+    try {
+        const res = await fetch(`/api/skins/${id}/activate`, {
+            method: "POST",
+            headers: {
+                "Authorization": `Bearer ${auth.token}`,
+                "Content-Type": "application/json"
+            }
+        });
+
+        if (res.ok) {
+            activeSkin.value = skins.value.find(s => Number(s.id) === Number(id));
+            
+            await auth.getUser(); 
+        }
+    } catch (error) {
+        console.error("Error al activar la skin:", error);
+    }
 };
 
 onMounted(async () => {
     await getSkins();
     await getActiveSkin();
+    loading.value = false;
 });
 </script>
 
 <style scoped>
 .skins-container {
-    padding-left: 50px;
-    padding-right: 20px;
+    min-height: 800px;
+}
+.titulo-skins {
+    justify-content: center;
 }
 
-.datos-card {
-    background: #12122a;
-    border-radius: 10px;
-    padding: 24px;
-    border: 1px solid rgba(156, 92, 203, 0.25);
-}
-
-.card-title {
-    margin-bottom: 20px;
-    text-transform: uppercase;
-    font-size: 13px;
-}
-
-.card-title span {
+.titulo-skins h2 {
+    font-weight: bold;
     background: linear-gradient(90deg, #9C5CCB, #3BC3DB);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-}
-
-.active-skin {
+    display: inline-block;
     text-align: center;
-    margin-bottom: 20px;
 }
 
-.active-img {
-    width: 120px;
-    border-radius: 10px;
+.section2Cartas {
+    perspective: 1000px;
 }
 
-.skins-grid {
+.card-container {
+    width: 248px;
+    height: 367px;
+}
+
+.card-inner {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.6s;
+}
+
+.card-container:hover .card-inner {
+    transform: rotateY(180deg);
+}
+
+.page {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 15px;
+    backface-visibility: hidden;
+}
+
+.page1 img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 15px;
+
+}
+
+.page2 {
+    background: white;
+    transform: rotateY(180deg);
+}
+
+.contenido {
+    height: 100%;
     display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-}
-
-.skin-card {
-    width: 150px;
-    padding: 10px;
-    background: #0e0e22;
-    border: 1px solid rgba(129, 138, 200, 0.3);
-    border-radius: 10px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     text-align: center;
+    color: black;
 }
 
-.skin-img {
-    width: 100px;
+.titulo-carta {
+    background: linear-gradient(90deg, #9C5CCB, #3BC3DB);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: inline-block;
 }
 
-.skin-name {
-    font-size: 12px;
-    color: white;
-    margin: 5px 0;
+.dado {
+    width: 50px;
+    height: 50px;
+    position: absolute;
+}
+
+.dado-tl {
+    top: 10px;
+    left: 10px;
+}
+
+.dado-br {
+    bottom: 10px;
+    right: 10px;
 }
 
 .btn-primary {
-    padding: 8px 15px;
+    margin-top: 10px;
+    padding: 8px 18px;
     border-radius: 20px;
     border: none;
     background: linear-gradient(90deg, #9C5CCB, #3BC3DB);
     color: white;
+    font-weight: bold;
     cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-primary:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 10px rgba(156, 92, 203, 0.6);
+}
+
+.card-container.active .card-inner {
+    box-shadow: 0 0 50px #9C5CCB;
+    border-radius: 15px;
 }
 
 .btn-active {
-    padding: 8px 15px;
+    margin-top: 10px;
+    padding: 8px 18px;
     border-radius: 20px;
-    border: none;
-    background: green;
-    color: white;
+    border: 2px solid #9C5CCB;
+    background: transparent;
+    color: #9C5CCB;
+    font-weight: bold;
+    cursor: default;
 }
 </style>

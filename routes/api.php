@@ -78,6 +78,9 @@ Route::delete('/skins/{skin}', [SkinController::class, 'destroy']);
 Route::put('/skins/{skin}', [SkinController::class, 'update']);
 Route::post('/skins/updateimg', [SkinController::class, 'updateimg']);
 Route::middleware('auth:sanctum')->post('/buy-skin', [UserController::class, 'buy']);
+// SKINS — activar skin (requiere auth)
+Route::middleware('auth:sanctum')->get('/user/skins', [UserController::class, 'mySkins']);
+Route::middleware('auth:sanctum')->post('/skins/{skin}/activate', [SkinController::class, 'activate']);
 
 // LOGROS
 Route::get('/logros', [LogroController::class, 'index']);
@@ -93,9 +96,6 @@ Route::get('/logs/{log}', [LogController::class, 'show']);
 Route::delete('/logs/{log}', [LogController::class, 'destroy']);
 Route::post('/logs', [LogController::class, 'store']);
  
-// SKINS — activar skin (requiere auth)
-Route::middleware('auth:sanctum')->post('/skins/{skin}/activate', [SkinController::class, 'activate']);
-
 // SALAS (requieren auth — Auth::user() debe estar disponible)
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/salas', [SalaController::class, 'index']);
@@ -142,3 +142,4 @@ Route::post('/carteras', [CarteraController::class, 'store']);
 //RANKING
 Route::get('/ranking', [RankingController::class, 'index']);
 Route::get('/ranking-beneficio', [RankingController::class, 'topBeneficio']);
+Route::get('/ranking/top-mano', [RankingController::class, 'topBeneficioPorMano']);
