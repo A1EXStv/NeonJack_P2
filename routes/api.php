@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\PermissionController;
 use App\Http\Controllers\Api\PostController;
 
 use App\Http\Controllers\Api\TransaccionController;
+use App\Http\Controllers\Api\RedsysController;
 use App\Http\Controllers\Api\SkinController;
 use App\Http\Controllers\Api\LogroController;
 use App\Http\Controllers\Api\LogController;
@@ -40,6 +41,12 @@ Route::group(['middleware' => 'auth:sanctum'], function() {
     Route::get('/user', [ProfileController::class, 'user']);
     Route::get('/user/signin', [ProfileController::class, 'user']);
     Route::put('/user', [ProfileController::class, 'update']);
+
+    // Transacciones del usuario autenticado
+    Route::get('/mis-transacciones', [TransaccionController::class, 'misTransacciones']);
+
+    // Redsys
+    Route::post('/redsys/create-payment', [RedsysController::class, 'createPayment']);
 
 
     Route::get('abilities', function(Request $request) {
