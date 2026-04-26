@@ -25,6 +25,17 @@ class TransaccionController extends Controller
     }
 
     /**
+     * Devuelve las transacciones del usuario autenticado.
+     */
+    public function misTransacciones(Request $request)
+    {
+        $transacciones = Transaccion::where('user_id', $request->user()->id)
+            ->latest()
+            ->get();
+        return response()->json($transacciones);
+    }
+
+    /**
      * Almacena un recurso recién creado.
      */
     public function store(StoreTransaccionRequest $request)

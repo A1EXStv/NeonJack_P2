@@ -122,6 +122,12 @@ export default [
                 meta: { breadCrumb: 'Skins' },
             },
             {
+                name: 'app.transactions',
+                path: 'transactions',
+                component: () => import('../views/user/transactions/index.vue'),
+                meta: { breadCrumb: 'Transacciones' },
+            },
+            {
                 name: 'game.lobby',
                 path: 'salas',
                 component: () => import('../views/user/game/Lobby.vue'),

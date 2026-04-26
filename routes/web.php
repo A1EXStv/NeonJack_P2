@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
-
+use App\Http\Controllers\Api\RedsysController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,6 +18,11 @@ use Illuminate\Support\Facades\Route;
 Route::post('login', [AuthenticatedSessionController::class, 'login']);
 Route::post('register', [AuthenticatedSessionController::class, 'register']);
 Route::post('logout', [AuthenticatedSessionController::class, 'logout']);
+
+// Redsys callbacks (CSRF exempt — ver VerifyCsrfToken)
+Route::post('redsys/notification', [RedsysController::class, 'notification']);
+Route::get('redsys/success',       [RedsysController::class, 'success']);
+Route::get('redsys/failure',       [RedsysController::class, 'failure']);
 
  
 
