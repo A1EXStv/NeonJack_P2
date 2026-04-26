@@ -55,4 +55,29 @@ public function topBeneficio()
 
     return RankingResource::collection($ranking);
 }
+
+public function topBeneficioPorMano()
+{
+    $ranking = DB::table('partida_usuario as pu')
+        ->join('users as u', 'pu.user_id', '=', 'u.id')
+        ->leftJoin('media as m', function ($join) {
+            $join->on('m.model_id', '=', 'u.id')
+                 ->where('m.model_type', 'App\Models\User')
+                 ->where('m.collection_name', 'avatar');
+        })
+        ->select(
+            'u.id',
+            'u.alias as name',
+            DB::raw('MAX(pu.balance_resultado) as total'),
+            DB::raw('MAX(m.file_name) as avatar')
+        )
+        ->where('pu.estado', 'finalizado')
+        ->where('pu.balance_resultado', '>', 0) 
+        ->groupBy('u.id', 'u.alias')
+        ->orderByDesc('total')
+        ->limit(4)
+        ->get();
+
+    return RankingResource::collection($ranking);
+}
 }
