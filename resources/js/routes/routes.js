@@ -115,6 +115,12 @@ export default [
                 component: () => import('../views/user/profile.vue'),
                 meta: { breadCrumb: 'Perfil' },
             },
+             {
+                name: 'app.skinUser',
+                path: 'skins',
+                component: () => import('../views/user/skinUser.vue'),
+                meta: { breadCrumb: 'Skins' },
+            },
             {
                 name: 'game.lobby',
                 path: 'salas',
