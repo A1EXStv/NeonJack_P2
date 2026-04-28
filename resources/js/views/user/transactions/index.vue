@@ -434,6 +434,7 @@ onMounted(async () => {
     display: flex;
     flex-direction: column;
     gap: 20px;
+    min-height: 820px;
 }
 
 .datos-card {

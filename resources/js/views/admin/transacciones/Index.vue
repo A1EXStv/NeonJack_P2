@@ -201,6 +201,9 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.transactions-page {
+    min-height: 800px;
+}
 .text-green-600 { color: #10b981; }
 .text-red-600 { color: #ef4444; }
 :deep(.p-datatable-sm) { font-size: 0.85rem; }
