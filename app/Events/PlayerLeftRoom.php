@@ -20,6 +20,14 @@ class PlayerLeftRoom implements ShouldBroadcast
 
     public function broadcastOn(): array
     {
-        return [new Channel('sala.' . $this->sala->id)];
+        return [
+            new Channel('sala.' . $this->sala->id),
+            new Channel('lobby'),
+        ];
+    }
+
+    public function broadcastAs(): string
+    {
+        return 'PlayerLeftRoom';
     }
 }

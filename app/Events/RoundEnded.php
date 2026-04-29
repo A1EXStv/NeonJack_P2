@@ -23,4 +23,9 @@ class RoundEnded implements ShouldBroadcast
     {
         return [new Channel('sala.' . $this->sala->id)];
     }
+
+    public function broadcastAs(): string
+    {
+        return 'RoundEnded';
+    }
 }

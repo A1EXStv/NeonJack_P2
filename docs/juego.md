@@ -2,7 +2,7 @@
 
 ## Visión general
 
-El juego sigue las reglas estándar de Blackjack: el objetivo es llegar a 21 sin pasarse, superando la puntuación del dealer. El sistema está implementado en el backend con `BlackjackService` y se refleja en el frontend a través de polling cada 2 segundos.
+El juego sigue las reglas estándar de Blackjack: el objetivo es llegar a 21 sin pasarse, superando la puntuación del dealer. El sistema está implementado en el backend con `BlackjackService` y se sincroniza en tiempo real con el frontend a través de **WebSockets (Laravel Reverb)**, con un fallback de polling cada 30 segundos.
 
 ---
 
@@ -88,7 +88,6 @@ public static function calcularPuntuacion(array $cartas): int
         elseif ($carta['valor'] === 'A') { $total += 11; $ases++; }
         else $total += (int) $carta['valor'];
     }
-    // Los ases pasan de 11 a 1 si se supera 21
     while ($total > 21 && $ases > 0) { $total -= 10; $ases--; }
     return $total;
 }
@@ -120,9 +119,10 @@ foreach ($jugadores as $jugador) {
 }
 
 $sala->update(['status' => 'playing']);
+broadcast(new GameStarted($sala, $data)); // → WS: canal sala.{id} y lobby
 ```
 
-Se crean los registros `PartidaUser` con estado `apostando` para cada jugador activo.
+Se crean los registros `PartidaUser` con estado `apostando` para cada jugador activo. El evento `GameStarted` notifica a todos en la sala y en el lobby.
 
 ### 2. Apostar — `apostar()`
 
@@ -156,6 +156,10 @@ Dealer    → 2ª carta (boca abajo / oculta)
 ```
 
 ```php
+// Emitir evento por cada carta repartida
+broadcast(new CardDealt($sala, $jugador->user_id, $carta, false)); // → WS: canal sala.{id}
+broadcast(new CardDealt($sala, null, $cartaDealer, true));         // hidden=true → carta oculta del dealer
+
 // Detectar blackjacks inmediatos
 foreach ($jugadores as $pu) {
     $pu->refresh();
@@ -168,7 +172,7 @@ foreach ($jugadores as $pu) {
 $this->siguienteTurno($partida);
 ```
 
-Un Blackjack natural (As + figura/10 en 2 cartas) se resuelve inmediatamente.
+Un Blackjack natural (As + figura/10 en 2 cartas) se resuelve inmediatamente. Cada carta repartida dispara un evento WebSocket que el frontend recibe para actualizar el estado.
 
 ### 4. Gestión de turnos — `siguienteTurno()`
 
@@ -182,7 +186,7 @@ private function siguienteTurno(Partida $partida): void
 
     if ($siguiente) {
         $siguiente->update(['estado' => 'jugando']);
-        broadcast(new TurnChanged($partida->sala, $siguiente->user_id, 30));
+        broadcast(new TurnChanged($partida->sala, $siguiente->user_id, 30)); // → WS
         return;
     }
 
@@ -191,7 +195,7 @@ private function siguienteTurno(Partida $partida): void
 }
 ```
 
-Los jugadores juegan por orden de ID de `PartidaUser`. Cuando no queda nadie en `esperando`, juega el dealer.
+Los jugadores juegan por orden de ID de `PartidaUser`. El evento `TurnChanged` llega al frontend, que inmediatamente hace un fetch del estado completo y activa el timer de turno del jugador correspondiente.
 
 ### 5. Acciones del jugador
 
@@ -200,6 +204,7 @@ Los jugadores juegan por orden de ID de `PartidaUser`. Cuando no queda nadie en 
 ```php
 $carta = $this->generarBaraja()[0]; // carta aleatoria de nueva baraja
 $pu->agregarCarta($carta);
+broadcast(new CardDealt($sala, $pu->user_id, $carta)); // → WS
 
 if ($pu->haReventado()) {          // puntuación > 21
     $pu->update(['estado' => 'reventado']);
@@ -223,6 +228,7 @@ if (count($pu->mano_usuario) !== 2) throw new Exception(...);
 $nuevaApuesta = $pu->apuesta_total * 2;
 $pu->update(['apuesta_total' => $nuevaApuesta]);
 $pu->agregarCarta($carta);   // solo 1 carta más
+broadcast(new CardDealt($sala, $pu->user_id, $carta)); // → WS
 
 $estado = $pu->haReventado() ? 'reventado' : 'doblado';
 $pu->update(['estado' => $estado]);
@@ -264,19 +270,20 @@ El split crea un **segundo registro `PartidaUser`** para el mismo usuario. La se
 
 ```php
 // Revelar la carta oculta
-broadcast(new CardDealt($partida->sala, null, $manoDealer[1]));
+broadcast(new CardDealt($partida->sala, null, $manoDealer[1])); // → WS (hidden=false ahora)
 
 // El dealer pide cartas mientras tenga menos de 17 (regla estándar)
 while (calcularPuntuacion($manoDealer) < 17) {
     $carta = array_shift($baraja);
     $manoDealer[] = $carta;
     $partida->update(['mano_dealer' => $manoDealer]);
+    broadcast(new CardDealt($partida->sala, null, $carta)); // → WS
 }
 
 $this->resolverRonda($partida, $manoDealer);
 ```
 
-El dealer siempre se planta en 17 o más (hard/soft 17).
+El dealer siempre se planta en 17 o más (hard/soft 17). Cada carta del dealer dispara un evento WebSocket.
 
 ### 7. Resolver ronda — `resolverRonda()`
 
@@ -308,6 +315,7 @@ Al final de la ronda:
 ```php
 $partida->update(['estado' => 'finalizada']);
 $partida->sala->update(['status' => 'waiting']); // sala vuelve a aceptar jugadores
+broadcast(new RoundEnded($sala, $resultados, $manoDealer)); // → WS
 ```
 
 ---
@@ -349,7 +357,106 @@ public function estado(Partida $partida): JsonResponse
 }
 ```
 
-Devuelve toda la información de la partida incluyendo los jugadores y sus manos. El frontend lo llama cada 2 segundos (polling).
+Devuelve toda la información de la partida incluyendo los jugadores y sus manos. El frontend lo llama en el mount inicial, ante cada evento WebSocket, y como fallback cada 30 segundos.
+
+---
+
+## WebSockets — Eventos de juego
+
+### Stack tecnológico
+
+```
+Laravel Reverb  →  servidor WebSocket (localhost:8080, protocolo Pusher)
+Laravel Echo    →  cliente WebSocket en el frontend (npm: laravel-echo)
+pusher-js       →  driver de transporte que Echo usa internamente con Reverb
+```
+
+Aunque se usa `pusher-js` como librería de transporte, **no se conecta a los servidores externos de Pusher**. Reverb implementa el mismo protocolo WebSocket que Pusher pero corre localmente.
+
+### Configuración del backend
+
+**.env:**
+```env
+BROADCAST_DRIVER=reverb
+
+REVERB_APP_ID=793789
+REVERB_APP_KEY=8qdpzt7jfwze4mni5bsa
+REVERB_APP_SECRET=v5zaywmbhfsqchrordsu
+REVERB_HOST="localhost"
+REVERB_PORT=8080
+REVERB_SCHEME=http
+```
+
+**config/broadcasting.php** — conexión añadida:
+```php
+'reverb' => [
+    'driver' => 'reverb',
+    'key'    => env('REVERB_APP_KEY'),
+    'secret' => env('REVERB_APP_SECRET'),
+    'app_id' => env('REVERB_APP_ID'),
+    'options' => [
+        'host'   => env('REVERB_HOST'),
+        'port'   => env('REVERB_PORT', 8080),
+        'scheme' => env('REVERB_SCHEME', 'http'),
+        'useTLS' => env('REVERB_SCHEME', 'http') === 'https',
+    ],
+],
+```
+
+### Configuración del frontend
+
+**resources/js/plugins/axios.js:**
+```javascript
+import Echo from 'laravel-echo';
+import Pusher from 'pusher-js';
+window.Pusher = Pusher;
+
+window.Echo = new Echo({
+    broadcaster: 'reverb',
+    key: import.meta.env.VITE_REVERB_APP_KEY,       // 8qdpzt7jfwze4mni5bsa
+    wsHost: import.meta.env.VITE_REVERB_HOST,        // localhost
+    wsPort: import.meta.env.VITE_REVERB_PORT ?? 8080,
+    wssPort: import.meta.env.VITE_REVERB_PORT ?? 8080,
+    forceTLS: (import.meta.env.VITE_REVERB_SCHEME ?? 'http') === 'https',
+    enabledTransports: ['ws', 'wss'],
+});
+```
+
+`window.Echo` queda disponible globalmente y puede usarse desde cualquier componente o composable.
+
+### Eventos del juego y sus canales
+
+Todos los eventos de juego se emiten en el canal público `sala.{id}`, donde `id` es el ID de la sala en la base de datos (no el código `BJ-XXXX`).
+
+| Evento | Canal | Payload | Cuándo se emite |
+|---|---|---|---|
+| `CardDealt` | `sala.{id}` | `{ sala, userId, card, hidden }` | Cada carta repartida (jugadores y dealer) |
+| `TurnChanged` | `sala.{id}` | `{ sala, userId, timeout }` | Cambio de turno entre jugadores |
+| `GameStarted` | `sala.{id}` + `lobby` | `{ sala, data }` | Al iniciar la partida |
+| `RoundEnded` | `sala.{id}` | `{ sala, resultados, manoDealer }` | Al resolver la ronda |
+
+Todos los eventos implementan `ShouldBroadcast` y definen `broadcastAs()` con el nombre corto (sin namespace) para que Echo pueda escucharlos con prefijo `.`:
+
+```php
+class CardDealt implements ShouldBroadcast
+{
+    public function broadcastOn(): array
+    {
+        return [new Channel('sala.' . $this->sala->id)];
+    }
+
+    public function broadcastAs(): string
+    {
+        return 'CardDealt'; // nombre limpio para Echo
+    }
+}
+```
+
+### Por qué `QUEUE_CONNECTION=sync`
+
+Con `QUEUE_CONNECTION=sync`, los eventos se emiten **de forma síncrona** durante la misma petición HTTP que los dispara. Esto significa que cuando el frontend llama a `POST /hit`, la respuesta HTTP no llega hasta que el evento WebSocket ya fue enviado a Reverb. No hace falta un worker de colas corriendo.
+
+Si en producción se cambia a `redis` o `database`, los eventos se encolarán y harán falta workers (`php artisan queue:work`) para procesarlos.
 
 ---
 
@@ -357,14 +464,30 @@ Devuelve toda la información de la partida incluyendo los jugadores y sus manos
 
 Todo el estado y lógica del juego vive en este composable. `GameTable.vue` solo importa lo que necesita.
 
-### Polling del estado
+### Conexión WebSocket al montar
 
 ```javascript
 onMounted(async () => {
+    // Carga inicial — estado completo de la partida, skin y código de sala
     await Promise.all([fetchGameState(), fetchSkinUrl(), fetchSalaCode()]);
-    pollTimer = setInterval(fetchGameState, 2000); // refresca cada 2s
+
+    const salaId = route.params.salaId;
+
+    // Suscripción al canal de la sala
+    window.Echo.channel(`sala.${salaId}`)
+        .listen('.CardDealt',   () => fetchGameState())
+        .listen('.TurnChanged', () => fetchGameState())
+        .listen('.GameStarted', () => fetchGameState())
+        .listen('.RoundEnded',  () => fetchGameState());
+
+    // Fallback: refresca el estado completo cada 30s
+    // (protege contra desconexiones WS o mensajes perdidos)
+    pollTimer = setInterval(fetchGameState, 30000);
 });
+
 onUnmounted(() => {
+    const salaId = route.params.salaId;
+    if (salaId) window.Echo.leave(`sala.${salaId}`); // cancela la suscripción
     clearInterval(pollTimer);
     clearInterval(bettingInterval);
     clearInterval(turnInterval);
@@ -372,7 +495,23 @@ onUnmounted(() => {
 });
 ```
 
-No usa WebSockets. El estado se sincroniza via polling, lo que simplifica la arquitectura a costa de ~2s de latencia entre acciones.
+### Flujo de un evento WebSocket recibido
+
+```
+Backend: BlackjackService llama $this->siguienteTurno()
+    └─► broadcast(new TurnChanged($sala, $userId, 30))
+    └─► Reverb emite el mensaje en WebSocket al canal 'sala.{id}'
+
+Frontend: Echo recibe el mensaje
+    └─► .listen('.TurnChanged', () => fetchGameState())
+    └─► fetchGameState() → GET /api/partidas/{id}/estado
+    └─► gameState.value = respuesta
+    └─► Vue reactivity actualiza todos los computed (myPU, isPlayerTurn, etc.)
+    └─► watch(() => myPU.value?.estado) detecta el cambio de estado
+    └─► Si es 'jugando' → arranca el turnInterval de 25 segundos
+```
+
+La estrategia de "recibir evento → hacer fetch completo" es más robusta que actualizar el estado parcialmente desde el payload del evento, ya que garantiza que el frontend siempre tiene el estado exacto de la base de datos.
 
 ### Timers automáticos
 
@@ -414,27 +553,25 @@ Si el jugador no actúa en 25s, se planta automáticamente.
 #### Timer de reinicio (10s)
 
 ```javascript
-// Cuando la partida se finaliza, cuenta atrás para nueva ronda
 watch(() => gameState.value?.estado, (newState) => {
-    if (newState !== 'finalizada') { ... return; }
+    if (newState !== 'finalizada') { clearInterval(restartInterval); return; }
     startRestartCountdown(); // 10s
 });
 
 const autoRestart = async () => {
-    try { await axios.post(`/api/salas/${salaId}/iniciar`); } catch {} // solo owner puede
-    await new Promise(r => setTimeout(r, 1200)); // esperar a que se cree
-    // Todos navegan a la nueva partida
+    try { await axios.post(`/api/salas/${salaId}/iniciar`); } catch {} // 403 si no es owner
+    await new Promise(r => setTimeout(r, 1200)); // espera a que la partida se cree en BD
     const res = await axios.get(`/api/salas/${salaId}`);
     const newPartida = res.data?.partidas?.[0];
     if (newPartida?.id !== currentPartidaId) {
         router.push({ name: 'game.table', params: { ..., partidaId: newPartida.id } });
-        return;
+        return; // todos navegan al nuevo partidaId
     }
-    startRestartCountdown(); // Si no hay nueva partida, reintentar
+    startRestartCountdown(); // si no hay nueva partida, reintentar
 };
 ```
 
-Al acabar la ronda, el owner crea la siguiente automáticamente. Si falla (owner ausente), el countdown se reinicia indefinidamente hasta que alguien inicie.
+Al acabar la ronda: el owner lanza la siguiente automáticamente. Los demás jugadores reciben el `GameStarted` por WebSocket, hacen fetch del estado y navegan al nuevo `partidaId`.
 
 ### Visualización de timers — SVG ring
 
@@ -456,15 +593,6 @@ Al acabar la ronda, el owner crea la siguiente automáticamente. Si falla (owner
 ### Sistema de apuestas con fichas
 
 ```javascript
-const CHIPS = [
-    { value: 5,   label: '5',   bg: '#e5e7eb', ... },
-    { value: 10,  label: '10',  bg: '#2563eb', ... },
-    { value: 25,  label: '25',  bg: '#16a34a', ... },
-    { value: 50,  label: '50',  bg: '#dc2626', ... },
-    { value: 100, label: '100', bg: '#111827', ... },
-    { value: 500, label: '500', bg: '#7c3aed', ... },
-];
-
 const addChip  = (v) => { betAmount.value += v; betHistory.value.push(v); };
 const undoChip = () => { betAmount.value -= betHistory.value.pop(); };
 const clearBet = () => { betAmount.value = 0; betHistory.value = []; };
@@ -495,7 +623,22 @@ El dorso puede ser una imagen de skin personalizada (Spatie MediaLibrary) o el p
 
 ### Animación de reparto
 
-Cuando una carta es "nueva" (recién añadida a la mano), recibe la clase `card-deal-up` (dealer) o `card-deal-down` (jugador):
+Cuando una carta es "nueva" (recién añadida a la mano), recibe la clase `card-deal-up` (dealer) o `card-deal-down` (jugador). Esta animación se activa gracias a los eventos WebSocket: `CardDealt` llega → `fetchGameState()` → la mano crece → el watcher detecta el índice nuevo → se añade la clase de animación.
+
+```javascript
+const animNew = (idxSet, prev, next) => {
+    for (let i = prev; i < next; i++) {
+        idxSet.value.add(i);
+        setTimeout(() => idxSet.value.delete(i), 800); // quitar clase tras la animación
+    }
+};
+
+watch(myHand, cards => {
+    if (cards.length > prevMyLen.value)
+        animNew(myNewIdx, prevMyLen.value, cards.length);
+    prevMyLen.value = cards.length;
+}, { deep: true });
+```
 
 ```css
 @keyframes card-deal-up {
@@ -506,48 +649,58 @@ Cuando una carta es "nueva" (recién añadida a la mano), recibe la clase `card-
 }
 ```
 
-La carta aparece desde el mazo central, vuela hasta su posición y se voltea revelando su valor. El tracking de cartas nuevas usa un `Set` de índices:
-
-```javascript
-const animNew = (idxSet, prev, next) => {
-    for (let i = prev; i < next; i++) {
-        idxSet.value.add(i);
-        setTimeout(() => idxSet.value.delete(i), 800); // quitar clase tras la animación
-    }
-};
-watch(myHand, cards => {
-    if (cards.length > prevMyLen.value)
-        animNew(myNewIdx, prevMyLen.value, cards.length);
-    prevMyLen.value = cards.length;
-}, { deep: true });
-```
-
 ---
 
-## Flujo resumido E2E
+## Flujo resumido E2E con WebSockets
 
 ```
 [Lobby] Owner crea sala
-    └─► Jugadores se unen (join)
+    └─► Jugadores se unen → WS: PlayerJoinedRoom → lobby actualiza lista
     └─► Owner pulsa "Iniciar" → POST /salas/{id}/iniciar
             └─► BlackjackService::iniciarPartida()
                     └─► Crea Partida + PartidaUsers (estado: apostando)
                     └─► sala.status = 'playing'
+                    └─► WS: GameStarted → sala.{id} + lobby
 
-[GameTable] Todos apuestan → POST /partidas/{id}/apostar
+[GameTable] useGame monta → fetch inicial → suscripción a sala.{id}
+
+[Fase apuesta] Todos apuestan → POST /partidas/{id}/apostar
     └─► Último en apostar → repartirCartasIniciales()
-            └─► 2 cartas por jugador + 2 al dealer (1 oculta)
+            └─► WS: CardDealt × (2 por jugador + 2 dealer)
+            └─► Frontend: cada CardDealt → fetchGameState() → mano aparece con animación
             └─► Detectar blackjacks → siguienteTurno()
+                    └─► WS: TurnChanged → frontend activa timer 25s
 
 [Turno de cada jugador] hit / stand / doblar / dividir
+    └─► POST /partidas/{id}/hit → carta añadida
+            └─► WS: CardDealt → frontend → fetchGameState() → animación
     └─► Cada acción llama a siguienteTurno()
-    └─► Cuando no hay más jugadores en 'esperando' → turnoDealer()
+            └─► WS: TurnChanged → siguiente jugador recibe timer
 
-[Dealer juega] Se revela carta oculta + pide hasta 17
-    └─► resolverRonda() → calcula resultados + balances
-    └─► partida.estado = 'finalizada' / sala.status = 'waiting'
+[Dealer juega]
+    └─► WS: CardDealt (carta oculta revelada + nuevas cartas del dealer)
+    └─► resolverRonda() → wallets actualizadas en BD
+            └─► WS: RoundEnded → frontend → fetchGameState() → muestra resultados
 
-[Frontend] restartTimer (10s) → autoRestart()
-    └─► Owner llama a iniciar → nueva Partida
-    └─► Todos navegan al nuevo partidaId
+[Fin de ronda] restartTimer (10s) → autoRestart()
+    └─► Owner: POST /salas/{id}/iniciar → nueva Partida
+            └─► WS: GameStarted → todos hacen fetchGameState()
+    └─► Todos: GET /salas/{id} → nuevo partidaId → router.push a nueva partida
 ```
+
+---
+
+## Cómo arrancar el sistema completo
+
+```bash
+# Terminal 1 — API Laravel
+php artisan serve
+
+# Terminal 2 — Servidor WebSocket Reverb
+php artisan reverb:start
+
+# Terminal 3 — Vite (frontend)
+npm run dev
+```
+
+**Verificar la conexión WebSocket:** Abrir DevTools → Network → WS → debe aparecer una conexión activa a `ws://localhost:8080/app/{REVERB_APP_KEY}`. En la pestaña "Messages" de esa conexión se pueden ver en tiempo real los eventos que llegan (CardDealt, TurnChanged, etc.).

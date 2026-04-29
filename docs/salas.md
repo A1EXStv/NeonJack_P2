@@ -168,7 +168,6 @@ El creador queda automáticamente inscrito en el asiento 1 con 1000 fichas.
 ```php
 public function join(Sala $sala): JsonResponse
 {
-    // ...
     $partidaEnApuesta = null;
     if ($sala->status === 'playing') {
         $partida = $sala->partidas()->where('estado', 'en_curso')->latest()->first();
@@ -195,6 +194,8 @@ public function join(Sala $sala): JsonResponse
             ]);
         }
     });
+
+    broadcast(new PlayerJoinedRoom($sala, $user, $seat))->toOthers();
 }
 ```
 
@@ -202,6 +203,8 @@ public function join(Sala $sala): JsonResponse
 - `status = 'waiting'` → unión normal, el jugador espera a que el owner inicie.
 - `status = 'playing'` + partida en fase de apuesta → se une y puede apostar en la ronda actual.
 - `status = 'playing'` + cartas ya repartidas → rechazado (422).
+
+Al unirse, se emite `PlayerJoinedRoom` vía WebSocket a todos los demás (`.toOthers()`).
 
 ### `leave()` — Salir de una sala
 
@@ -237,24 +240,105 @@ public function leave(Sala $sala): JsonResponse
 ```
 
 **Lógica de cierre:**
-- El owner puede salir siempre (sin depender del pivot `sala_usuario`).
-- Si quedan otros jugadores → el ownership pasa al siguiente.
+- Si quedan otros jugadores → el ownership pasa al siguiente en la lista.
 - Si es el último → sala pasa a `finished` y deja de aparecer en el lobby.
+- `PlayerLeftRoom` se emite vía WebSocket solo si la sala no se cerró.
+
+---
+
+## WebSockets — Eventos de sala
+
+El sistema de salas emite eventos en tiempo real usando **Laravel Reverb** (servidor WebSocket) con el protocolo de Pusher. El frontend los recibe a través de **Laravel Echo**.
+
+### Configuración
+
+```
+Backend:  BROADCAST_DRIVER=reverb  (config/broadcasting.php → conexión 'reverb')
+Servidor: php artisan reverb:start  (WebSocket en localhost:8080)
+Frontend: Echo con broadcaster 'reverb', conectado a ws://localhost:8080
+```
+
+### Eventos disponibles
+
+| Evento | Canal | Descripción |
+|---|---|---|
+| `PlayerJoinedRoom` | `sala.{id}` + `lobby` | Un jugador entró a la sala |
+| `PlayerLeftRoom` | `sala.{id}` + `lobby` | Un jugador salió de la sala |
+| `GameStarted` | `sala.{id}` + `lobby` | El owner inició la partida |
+
+Los eventos `PlayerJoinedRoom`, `PlayerLeftRoom` y `GameStarted` se emiten en **dos canales simultáneamente**: el canal de la sala específica (`sala.{id}`) y un canal global (`lobby`). Esto permite que tanto los jugadores dentro de la sala como el lobby en general reciban la actualización.
+
+### Estructura de los eventos (PHP)
+
+```php
+// PlayerJoinedRoom — se emite en join() y store()
+class PlayerJoinedRoom implements ShouldBroadcast
+{
+    public function __construct(
+        public Sala $sala,
+        public $user,
+        public ?int $seat
+    ) {}
+
+    public function broadcastOn(): array
+    {
+        return [
+            new Channel('sala.' . $this->sala->id),
+            new Channel('lobby'),
+        ];
+    }
+
+    public function broadcastAs(): string { return 'PlayerJoinedRoom'; }
+}
+```
+
+El payload que recibe el frontend contiene los atributos públicos del evento serializados como JSON: `{ sala: {...}, user: {...}, seat: 1 }`.
+
+### Canal `lobby` — para qué sirve
+
+El canal `lobby` es un canal público (sin autenticación) al que se suscriben todos los usuarios que están en la pantalla de lobby. Cuando cualquier jugador entra o sale de cualquier sala, o cuando una partida comienza, el lobby recibe el evento y recarga la lista de salas sin esperar al siguiente ciclo de polling.
+
+```
+Usuario A entra a Sala #3
+    └─► SalaController::join() llama broadcast(new PlayerJoinedRoom($sala, $user, $seat))
+    └─► Reverb emite el evento en canal 'sala.3' Y en canal 'lobby'
+    └─► Todos los usuarios en el lobby reciben el evento por WS
+    └─► Lobby.vue llama a loadSalas() → lista actualizada al instante
+```
 
 ---
 
 ## Frontend — `Lobby.vue`
 
-### Ciclo de polling
+### Conexión WebSocket
+
+Al montar el componente, el lobby se suscribe al canal `lobby` y escucha los tres eventos relevantes:
 
 ```javascript
 onMounted(() => {
     loadSalas();
-    pollTimer = setInterval(loadSalas, 5000); // refresca cada 5s
+
+    window.Echo.channel('lobby')
+        .listen('.PlayerJoinedRoom', () => loadSalas())
+        .listen('.PlayerLeftRoom',   () => loadSalas())
+        .listen('.GameStarted',      () => loadSalas());
+
+    // Fallback: refresca la lista completa cada 30s
+    // (captura salas nuevas creadas que no tienen evento propio)
+    pollTimer = setInterval(loadSalas, 30000);
+});
+
+onUnmounted(() => {
+    window.Echo.leave('lobby'); // limpia la suscripción
+    clearInterval(pollTimer);
 });
 ```
 
-El lobby recarga la lista de salas cada 5 segundos sin WebSockets, usando polling simple.
+El punto clave del prefijo `.` en `.listen('.PlayerJoinedRoom', ...)`: la barra antes del nombre indica a Echo que use el nombre literal del evento tal como lo define `broadcastAs()`, sin añadir ningún prefijo de namespace automático.
+
+### Por qué se sigue usando un poll de 30s
+
+Los eventos del canal `lobby` cubren join/leave/game-start pero **no** la creación de nuevas salas: cuando alguien crea una sala, no hay un evento WebSocket que llegue al lobby (no existe un `SalaCreated` event). El fallback de 30 segundos garantiza que las salas nuevas aparezcan aunque nadie entre o salga de ellas.
 
 ### Lógica de botones por estado
 
@@ -290,11 +374,13 @@ Si la sala estaba jugando, el join navega automáticamente a `GameTable` con el 
 
 ```
 Crear sala (waiting)
-    └─► Jugadores se unen (join)
+    └─► Jugadores se unen (join)  → WS: PlayerJoinedRoom → lobby actualiza
     └─► Owner inicia partida → status: playing
+            └─► WS: GameStarted → lobby actualiza status de la sala
             └─► Partida en curso...
             └─► Ronda finalizada → status: waiting (vuelve a aceptar jugadores)
             └─► Auto-restart → nueva partida
+    └─► Jugador sale → WS: PlayerLeftRoom → lobby actualiza
     └─► Owner sale sin jugadores → status: finished (no aparece en lobby)
 ```
 
@@ -318,3 +404,20 @@ Route::middleware('auth:sanctum')->group(function () {
 ```
 
 Todas las rutas de sala están protegidas por Sanctum. `EnsureFrontendRequestsAreStateful` está en el grupo `api` del Kernel, habilitando autenticación por cookie de sesión para la SPA.
+
+---
+
+## Cómo arrancar el sistema completo
+
+```bash
+# Terminal 1 — API Laravel
+php artisan serve
+
+# Terminal 2 — Servidor WebSocket Reverb
+php artisan reverb:start
+
+# Terminal 3 — Vite (frontend)
+npm run dev
+```
+
+Para verificar la conexión WebSocket: DevTools → Network → WS → debe aparecer una conexión activa a `ws://localhost:8080/app/{REVERB_APP_KEY}`.

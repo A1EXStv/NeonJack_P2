@@ -297,11 +297,18 @@ const createSala = async () => {
 
 onMounted(() => {
   loadSalas();
-  // Poll every 5s so players see when the owner starts the game
-  pollTimer = setInterval(loadSalas, 5000);
+
+  window.Echo.channel('lobby')
+    .listen('.PlayerJoinedRoom', () => loadSalas())
+    .listen('.PlayerLeftRoom',   () => loadSalas())
+    .listen('.GameStarted',      () => loadSalas());
+
+  // Fallback poll cada 30s para capturar salas nuevas creadas
+  pollTimer = setInterval(loadSalas, 30000);
 });
 
 onUnmounted(() => {
+  window.Echo.leave('lobby');
   clearInterval(pollTimer);
 });
 </script>

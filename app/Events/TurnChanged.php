@@ -23,4 +23,9 @@ class TurnChanged implements ShouldBroadcast
     {
         return [new Channel('sala.' . $this->sala->id)];
     }
+
+    public function broadcastAs(): string
+    {
+        return 'TurnChanged';
+    }
 }

@@ -16,8 +16,9 @@ export function useGame() {
   const isLoading  = ref(true);
   const isActing   = ref(false);
   const error      = ref(null);
-  const mySkinUrl  = ref(null);
-  const salaCode   = ref('');
+  const mySkinUrl   = ref(null);
+  const salaCode    = ref('');
+  const salaOwnerId = ref(null);
 
   // ── Bet state ────────────────────────────────────────────────
   const betAmount  = ref(0);
@@ -171,12 +172,17 @@ export function useGame() {
   };
 
   const autoRestart = async () => {
-    // El owner lanza la nueva partida; el resto recibirá 403 (ignorado)
-    try { await axios.post(`/api/salas/${route.params.salaId}/iniciar`); } catch { /* ok */ }
+    // Solo el owner lanza la nueva partida. Los no-owners NO llaman a iniciar
+    // porque el interceptor de axios redirige a /login ante cualquier 403.
+    if (authUser.id === salaOwnerId.value) {
+      try { await axios.post(`/api/salas/${route.params.salaId}/iniciar`); } catch { /* ok */ }
+    }
     // Pausa para que la nueva partida se cree antes de consultarla
     await new Promise(r => setTimeout(r, 1200));
     try {
       const res = await axios.get(`/api/salas/${route.params.salaId}`);
+      // Actualizar owner por si cambió entre rondas (ej. owner salió)
+      salaOwnerId.value = res.data?.owner_id ?? salaOwnerId.value;
       const newPartida = res.data?.partidas?.[0];
       if (newPartida?.id && String(newPartida.id) !== String(route.params.partidaId)) {
         router.push({ name: 'game.table', params: { salaId: route.params.salaId, partidaId: newPartida.id } });
@@ -219,7 +225,8 @@ export function useGame() {
     if (!route.params.salaId) return;
     try {
       const res = await axios.get(`/api/salas/${route.params.salaId}`);
-      salaCode.value = res.data?.code ?? '';
+      salaCode.value    = res.data?.code     ?? '';
+      salaOwnerId.value = res.data?.owner_id ?? null;
     } catch { /* ignore */ }
   };
 
@@ -263,10 +270,30 @@ export function useGame() {
   // ── Lifecycle ─────────────────────────────────────────────────
   onMounted(async () => {
     await Promise.all([fetchGameState(), fetchSkinUrl(), fetchSalaCode()]);
-    pollTimer = setInterval(fetchGameState, 2000);
+
+    const salaId = route.params.salaId;
+    window.Echo.channel(`sala.${salaId}`)
+      .listen('.CardDealt',   () => fetchGameState())
+      .listen('.TurnChanged', () => fetchGameState())
+      .listen('.GameStarted', (e) => {
+        // El owner no recibe este evento (toOthers), así que aquí siempre es un no-owner.
+        // Navegamos directamente al nuevo partidaId que viene en el payload del evento.
+        const newId = e.data?.partida_id;
+        if (newId && String(newId) !== String(route.params.partidaId)) {
+          router.push({ name: 'game.table', params: { salaId: route.params.salaId, partidaId: newId } });
+        } else {
+          fetchGameState();
+        }
+      })
+      .listen('.RoundEnded',  () => fetchGameState());
+
+    // Fallback poll cada 30s por si el WebSocket se desconecta
+    pollTimer = setInterval(fetchGameState, 30000);
   });
 
   onUnmounted(() => {
+    const salaId = route.params.salaId;
+    if (salaId) window.Echo.leave(`sala.${salaId}`);
     clearInterval(pollTimer);
     clearInterval(bettingInterval);
     clearInterval(turnInterval);
