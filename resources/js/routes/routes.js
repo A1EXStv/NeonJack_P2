@@ -4,7 +4,6 @@ const AuthenticatedLayout = () => import('../layouts/AdminLayout.vue');
 const AuthenticatedUserLayout = () => import('../layouts/UserLayout.vue');
 const GuestLayout = () => import('../layouts/GuestLayout.vue');
 const BlankLayout = () => import('../layouts/BlankLayout.vue');
-const LobbyLayout = () => import('../layouts/LobbyLayout.vue');
 
 async function requireLogin(to, from, next) {
     const auth = authStore();
@@ -116,18 +115,23 @@ export default [
                 component: () => import('../views/user/profile.vue'),
                 meta: { breadCrumb: 'Perfil' },
             },
-        ]
-    },
-    {
-        path: '/app',
-        component: LobbyLayout,
-        beforeEnter: requireLogin,
-        children: [
+             {
+                name: 'app.skinUser',
+                path: 'skins',
+                component: () => import('../views/user/skinUser.vue'),
+                meta: { breadCrumb: 'Skins' },
+            },
+            {
+                name: 'app.transactions',
+                path: 'transacciones',
+                component: () => import('../views/user/transactions/index.vue'),
+                meta: { breadCrumb: 'Transacciones' },
+            },
             {
                 name: 'game.lobby',
                 path: 'salas',
                 component: () => import('../views/user/game/Lobby.vue'),
-                meta: { breadCrumb: 'Salas', hideBreadcrumb: true },
+                meta: { breadCrumb: 'Salas', hideBreadcrumb: true, hideSidebar: true },
             },
         ]
     },
