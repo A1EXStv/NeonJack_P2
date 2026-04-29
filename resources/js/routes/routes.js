@@ -123,7 +123,7 @@ export default [
             },
             {
                 name: 'app.transactions',
-                path: 'transactions',
+                path: 'transacciones',
                 component: () => import('../views/user/transactions/index.vue'),
                 meta: { breadCrumb: 'Transacciones' },
             },
