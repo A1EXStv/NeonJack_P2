@@ -186,7 +186,7 @@ import { ref, onMounted } from 'vue'
 import axios from 'axios'
 
 const skins = ref([])
-const rankings = ref([]) // Aquí guardaremos tus usuarios (aromero, ANUEL AA, etc.)
+const rankings = ref([])
 const rankingBeneficio = ref([])
 const rankingMano = ref([])
 const loading = ref(true)
@@ -197,24 +197,26 @@ const getImage = (skin) => {
 
 onMounted(async () => {
     try {
-        const [resSkins, resRankings, resRankingBeneficio, resRankingTopMano] = await Promise.all([
-            axios.get('/api/skins'),
-            axios.get('/api/ranking'),
-            axios.get('/api/ranking-beneficio'),
-            axios.get('/api/ranking/top-mano')
-        ])
-
+        const resSkins = await axios.get('/api/skins')
         skins.value = resSkins.data.data.slice(0, 4)
+    } catch (e) { console.error('Error skins:', e) }
 
-        rankings.value = resRankings.data.data
-        rankingBeneficio.value = resRankingBeneficio.data.data
-        rankingMano.value = resRankingTopMano.data.data
+    try {
+        const resRankings = await axios.get('/api/ranking')
+        rankings.value = resRankings.data.data ?? resRankings.data
+    } catch (e) { console.error('Error ranking:', e) }
 
-    } catch (error) {
-        console.error("Error cargando los datos:", error)
-    } finally {
-        loading.value = false
-    }
+    try {
+        const resRankingBeneficio = await axios.get('/api/ranking-beneficio')
+        rankingBeneficio.value = resRankingBeneficio.data.data ?? resRankingBeneficio.data
+    } catch (e) { console.error('Error ranking-beneficio:', e) }
+
+    try {
+        const resRankingTopMano = await axios.get('/api/ranking/top-mano')
+        rankingMano.value = resRankingTopMano.data.data ?? resRankingTopMano.data
+    } catch (e) { console.error('Error top-mano:', e) }
+
+    loading.value = false
 })
 </script>
 
