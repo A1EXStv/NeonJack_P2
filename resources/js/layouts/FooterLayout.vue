@@ -5,7 +5,7 @@
 
                 <div class="col-12 col-md-4 mb-4 mb-md-0">
                     <div class="footer-logo">
-                        <img src="/images/logoSinFondo.png" alt="Logo" style="height: 80px;">
+                        <img src="/images/logo_sin_fondo.webp" alt="Logo" style="height: 80px;">
                     </div>
                 </div>
 

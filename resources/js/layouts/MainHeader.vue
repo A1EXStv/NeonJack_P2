@@ -91,7 +91,7 @@
                                             </router-link>
                                         </li>
                                         <li>
-                                            <router-link to="/app" class="dropdown-menu-item" @click="dropdownOpen = false">
+                                            <router-link to="/app/profile" class="dropdown-menu-item" @click="dropdownOpen = false">
                                                 <i class="pi pi-graduation-cap text-blue-500"></i>
                                                 <span>Panel Usuario</span>
                                             </router-link>
