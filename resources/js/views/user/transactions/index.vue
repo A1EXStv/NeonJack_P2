@@ -90,9 +90,6 @@
             </div>
         </div>
 
-        <!-- ============================================================
-             MODAL: DEPOSITAR (Redsys)
-        ============================================================ -->
         <Teleport to="body">
             <div v-if="showDeposit" class="modal-overlay" @click.self="showDeposit = false">
                 <div class="modal-box">
