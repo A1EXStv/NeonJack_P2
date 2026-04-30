@@ -270,6 +270,7 @@ section {
     color: rgba(255, 255, 255, 0.8);
     font-size: 1.1rem;
     margin-bottom: 35px;
+    text-align: left;
 }
 
 .btn-primary {

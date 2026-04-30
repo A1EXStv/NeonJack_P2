@@ -17,6 +17,7 @@
                         <li class="nav-item"><router-link class="nav-link" to="/rules">Reglas</router-link></li>
                         <li class="nav-item"><router-link class="nav-link" to="/app">Inicio</router-link></li>
                         <li class="nav-item"><router-link class="nav-link" to="/shop">Tienda</router-link></li>
+                        <li class="nav-item"><router-link class="nav-link" to="/app/salas">Jugar</router-link></li>
                     </ul>
                 </div>
 
@@ -97,7 +98,7 @@ const route = useRoute();
 
 const handleLogout = async () => {
     await auth.logout(); 
-    router.push('/login'); 
+    router.push('/'); 
 };
 </script>
 

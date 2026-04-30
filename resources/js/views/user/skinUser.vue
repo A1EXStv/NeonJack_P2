@@ -1,7 +1,10 @@
 <template>
     <div class="skins-container">
         <div class="titulo-skins text-center">
-            <h2 class="pt-4 pb-5">Colección de Skins</h2>
+            <h2 class="pt-4 pb-3">Colección de Skins</h2>
+            <p class="text-white pb-5">
+            Explora tu colección de skins y elige tu apariencia favorita para destacar en el casino. Activa la skin que más te guste y haz que cada partida sea única.
+            </p>
         </div>
         <div v-if="loading" class="text-center text-white">
             Cargando skins...

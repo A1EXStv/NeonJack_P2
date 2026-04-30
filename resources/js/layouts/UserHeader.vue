@@ -79,20 +79,6 @@ import { authStore } from '../store/auth';
 const isAdmin = computed(() => auth.is('admin'));
 
 const route = useRoute();
-
-/*const props = defineProps({
-    sidebarOpen: {
-        type: Boolean,
-        default: false
-    },
-    isCollapsed: {
-        type: Boolean,
-        default: false
-    }
-});*/
-
-/*const emit = defineEmits(['toggleSidebar', 'toggleCollapse']);*/
-
 const { toggleDarkMode, isDarkTheme } = useLayout();
 const { logout: logoutAuth } = useAuth();
 const auth = authStore();

@@ -15,6 +15,7 @@
                         <li class="nav-item"><a class="nav-link" href="/rules">Reglas</a></li>
                         <li class="nav-item"><router-link class="nav-link" :to="isLogged ? '/app' : '/'">Inicio</router-link></li>
                         <li class="nav-item"><a class="nav-link" href="/shop">Tienda</a></li>
+                        <li class="nav-item"><router-link class="nav-link" to="/app/salas">Jugar</router-link></li>
                     </ul>
                 </div>
                 <div class="d-flex align-items-center">
