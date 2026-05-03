@@ -5,7 +5,7 @@
         <nav class="container mx-auto px-6 py-4 flex items-center justify-between">
             <!-- Logo -->
             <router-link to="/" class="flex items-center gap-2">
-                <img src="/images/logo.svg" alt="logo" class="h-10 w-auto"/>
+                <img src="/images/logo_sin_fondo.webp" alt="logo" class="h-10 w-auto"/>
             </router-link>
 
             <!-- Mobile Menu Button -->
