@@ -356,6 +356,9 @@ onUnmounted(() => {
 }
 
 /* ── Botones de acción principales ───────────────── */
+:deep(.p-button) {
+  border-radius: 50px !important;
+}
 :deep(.btn-brand.p-button) {
   background: linear-gradient(90deg, #9C5CCB, #818AC8, #3BC3DB) !important;
   border: none !important;

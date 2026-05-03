@@ -358,7 +358,7 @@ const PlayerSeatComp = defineComponent({
   flex-direction: column;
   background: #0d0a1a;
   padding: 10px;
-  font-family: 'Georgia', 'Times New Roman', serif;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
   user-select: none;
 }
 
@@ -393,7 +393,7 @@ const PlayerSeatComp = defineComponent({
   display: flex; align-items: center; gap: 5px;
   transition: color 0.15s;
 }
-.gt-hud-exit:hover { color: #3BC3DB; }
+.gt-hud-exit:hover { color: #f87171; }
 .gt-hud-code {
   font-family: monospace; font-size: 11px; letter-spacing: 1px;
   color: rgba(255,255,255,0.3); background: rgba(255,255,255,0.05);

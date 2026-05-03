@@ -78,7 +78,7 @@
             </div>
         </div>
 
-        <main class="main-user-content">
+        <main class="main-user-content" :class="{ 'no-sidebar': route.meta.hideSidebar }">
             <router-view />
         </main>
 
@@ -145,8 +145,12 @@ const handleLogout = async () => {
   
 }
 @media (min-width: 992px) {
-    .main-user-content {
+    .main-user-content:not(.no-sidebar) {
         padding-left: 300px;
+        padding-right: 40px;
+    }
+    .main-user-content.no-sidebar {
+        padding-left: 40px;
         padding-right: 40px;
     }
 }

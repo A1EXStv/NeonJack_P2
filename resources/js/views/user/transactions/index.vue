@@ -34,11 +34,16 @@
 
         <!-- Tabla de transacciones -->
         <div class="datos-card">
-            <div class="flex items-center justify-between mb-4">
-                <h3 class="card-title mb-0"><span>HISTORIAL</span></h3>
-                <button class="btn-refresh" @click="loadTransacciones" :disabled="loading">
-                    <i class="pi pi-refresh" :class="{ 'spin': loading }"></i>
-                </button>
+            <div class="d-flex flex align-item-center justify-between card-title w-full">
+                <div>
+                    <h3 class="card-titles "><span>HISTORIAL</span></h3>
+                </div>
+                <div>
+                    <button class="btn-refresh" @click="loadTransacciones" :disabled="loading">
+                        <i class="pi pi-refresh" :class="{ 'spin': loading }"></i>
+                    </button>
+                </div>
+                
             </div>
 
             <!-- Skeleton -->
@@ -451,7 +456,15 @@ onMounted(async () => {
     font-size: 13px;
     font-weight: 600;
 }
-.card-title.mb-0 { margin-bottom: 0; }
+.card-titles {
+    display: block;
+    position: relative;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-size: 13px;
+    font-weight: 600;
+}
+.card-title { margin-bottom: 0; }
 .card-title span {
     background: linear-gradient(90deg, #9C5CCB, #3BC3DB);
     -webkit-background-clip: text;
