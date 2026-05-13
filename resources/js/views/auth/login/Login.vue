@@ -3,7 +3,7 @@
         <div class="max-w-md w-full">
             <!-- Logo y título -->
             <div class="text-center mb-8">
-                <img src="/images/logo_sin_fondo.png" alt="Logo">
+                <img src="/images/logo_sin_fondo.webp" alt="Logo">
                 <p class="mt-2 text-sm text-gray-600 gray:text-gray-400">
                     Inicia sesión para continuar
                 </p>

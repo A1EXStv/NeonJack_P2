@@ -1,18 +1,18 @@
 <template>
     <section id="header">
         <div class="col-12 col-md-6 header-content">
-            <div class="titulo-card">
+            <div class="titulo-tienda">
                 <h1 class="">Tienda</h1>
                 <p>Compra skins exclusivas para tus cartas!</p>
             </div>
         </div>
     </section>
-    <section class="degradado mt-50">
+    <section class="degradado ">
         <div class="container glass-container">
             <div v-if="loading" class="text-center text-white">
                 Cargando skins...
             </div>
-            <div v-else class="section2Cartas d-flex justify-content-center align-items-center gap-5 flex-wrap  mt-25">
+            <div v-else class="section2Cartas d-flex justify-content-center align-items-center gap-5 flex-wrap  mt-5">
 
                 <!-- SKINS -->
                 <div v-for="skin in skins" :key="skin.id" class="card-container mb-50">
@@ -104,42 +104,34 @@ const buySkin = async (skinId, price) => {
 <style scoped>
 #header {
     padding-top: 44px;
-    height: 500px;
-    background-image: linear-gradient(to bottom,rgba(126,82,144,0) 60%,#110c22 100%),url(/images/header_tienda.png);
+    height: 400px;
+    background-image: linear-gradient(to bottom,rgba(126,82,144,0) 20%,#110c22 80%),url(/images/header_tienda.png);
     background-size: cover;
-    background-position: 50% 40%;
+    background-position: 50% 43%;
     background-repeat: no-repeat;
 }
 
 .titulo-tienda {
-    justify-content: center;
-}
-
-.titulo-tienda h1 {
-    font-weight: bold;
-    background: linear-gradient(90deg, #9C5CCB, #3BC3DB);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    display: inline-block;
-    text-align: center;
-}
-.titulo-card {
     width: 50%;
     padding: 25px;
-    margin-top: 150px;
+    margin-top: 80px;
     margin-left: 130px;
 }
 
-.titulo-card h1 {
+.titulo-tienda h1 {
     color: white;
     font-weight: 800;
     font-size: 3rem;
     line-height: 1;
     margin-bottom: 25px;
     text-transform: uppercase;
+    background: linear-gradient(90deg, #9C5CCB, #818AC8, #3BC3DB);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+
 }
 
-.titulo-card p {
+.titulo-tienda p {
     color: rgba(255, 255, 255, 0.8);
     font-size: 1.1rem;
     margin-bottom: 35px;
@@ -155,8 +147,9 @@ const buySkin = async (skinId, price) => {
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border-radius: 20px;
-    padding: 30px;
+    padding-top: 5px;
     z-index: 1;
+    margin-top: -80px;
 }
 
 .glass-container::before {
@@ -264,7 +257,7 @@ const buySkin = async (skinId, price) => {
     background: linear-gradient(180deg,#110c22 60%, #7E5290 150%);
     padding-bottom: 60px;
 }  
-
+/*
 @media (max-width: 480px) {
     .carousel-item .d-flex {
         flex-direction: column;
@@ -298,5 +291,5 @@ const buySkin = async (skinId, price) => {
         line-height: 18px;
     }
 }
-
+*/
 </style>

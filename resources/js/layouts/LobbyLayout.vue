@@ -10,7 +10,7 @@
                 </button>
 
                 <router-link class="logo navbar-brand mx-auto mx-lg-0" to="/">
-                    <img src="/images/logoSinFondo.png" alt="Logo">
+                    <img src="/images/logoSinFondo.webp" alt="Logo">
                 </router-link>
 
                 <div class="menu-center d-none d-lg-flex">
