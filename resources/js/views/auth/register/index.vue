@@ -226,7 +226,29 @@ const { registerForm, validationErrors, processing, submitRegister } = useAuth()
 :deep(.custom-card .p-card-body) {
     background: transparent !important;
 }
+:deep(.p-inputtext:enabled:hover) {
+    border-color: #818AC8; 
+}
+
+:deep(.p-inputtext:enabled:focus) {
+    border-color: #818AC8;
+    box-shadow: none;
+}
+
+:deep(.p-password-input:enabled:hover) {
+    border-color: #818AC8;
+}
+
+:deep(.p-password-input:enabled:focus) {
+    border-color: #818AC8;
+    box-shadow: none;
+}
+
+:deep(.p-button) {
+    width: 100%;
+}
 .boton-register button {
     border-radius: 50px;
 }
+
 </style>
