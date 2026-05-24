@@ -152,11 +152,13 @@ const onTemplatedUpload = async () => {
     display: flex;
     flex-direction: column;
     gap: 20px;
+    margin-left: 16px;
+    margin-right: 16px;
 }
 
 @media (min-width: 768px) {
     .profile-container {
-        padding-left: 50px;
+        padding-left: 34px;
         padding-bottom: 20px;
         display: block; 
     }
