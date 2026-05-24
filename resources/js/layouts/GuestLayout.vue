@@ -47,9 +47,10 @@
             </div>
             <div class="offcanvas-body">
                 <ul class="navbar-nav">
-                    <li class="nav-item"><a class="nav-link " href="#">REGLAS</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">INICIO</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">TIENDA</a></li>
+                    <li class="nav-item"><a class="nav-link " href="/rules">REGLAS</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/">INICIO</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/shop">TIENDA</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/app/salas">JUGAR</a></li>
                 </ul>
             </div>
         </div>

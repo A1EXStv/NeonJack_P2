@@ -3,7 +3,7 @@
         <div class="container">
             <div class="row align-items-center mb-4 text-center text-md-start">
 
-                <div class="col-12 col-md-4 mb-4 mb-md-0">
+                <div class="col-12 col-md-4 mb-4 mb-md-0 d-flex justify-content-center justify-content-md-start">
                     <div class="footer-logo">
                         <img src="/images/logo_sin_fondo.webp" alt="Logo" style="height: 80px;">
                     </div>
