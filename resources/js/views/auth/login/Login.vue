@@ -117,37 +117,65 @@ const { loginForm, validationErrors, processing, submitLogin } = useAuth();
     display: inline-block;
 }
 
-/* Estilos para InputText de PrimeVue */
-:deep(.p-inputtext) {
-    width: 100%;
+:deep(.p-inputtext:enabled:hover) {
+    border-color: #818AC8; 
 }
 
-/* Estilos para Password de PrimeVue */
-:deep(.p-password) {
-    width: 100%;
+:deep(.p-inputtext:enabled:focus) {
+    border-color: #818AC8;
+    box-shadow: none;
 }
 
-:deep(.p-password-input) {
-    width: 100%;
+:deep(.p-password-input:enabled:hover) {
+    border-color: #818AC8;
 }
 
-/* Estilos para Button de PrimeVue */
+:deep(.p-password-input:enabled:focus) {
+    border-color: #818AC8;
+    box-shadow: none;
+}
+
 :deep(.p-button) {
     width: 100%;
 }
 
 :deep(.custom-card.p-card) {
-    background: rgba(255, 255, 255, 0.08) !important;
-    backdrop-filter: blur(12px) !important;
-    -webkit-backdrop-filter: blur(12px) !important;
-    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    background: rgba(255, 255, 255, 0.08) ;
+    backdrop-filter: blur(12px) ;
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.15) ;
     border-radius: 0.75rem;
 }
 
 :deep(.custom-card .p-card-body) {
-    background: transparent !important;
+    background: transparent ;
 }
 .boton-login button {
     border-radius: 50px;
 }
+
+:deep(.p-checkbox .p-checkbox-box:hover) {
+    border-color: #A5ACF5;
+    background: transparent;
+}
+
+:deep(.p-checkbox.p-highlight .p-checkbox-box) {
+    background-color: #818AC8;
+}
+
+:deep(.p-checkbox.p-highlight .p-checkbox-box:hover) {
+    background: #6f78b8;
+    border-color: #6f78b8;
+}
+
+:deep(.p-checkbox .p-checkbox-icon) {
+    color: white;
+}
+
+:deep(.p-checkbox-checked .p-checkbox-box) {
+    background: linear-gradient(90deg, #9C5CCB, #818AC8, #3BC3DB);
+    border-color: #818AC8;
+    background-color: #818AC8 !important;
+}
+
 </style>
