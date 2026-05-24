@@ -34,12 +34,8 @@
             <!--Avatar-->
             <div class="sidebar-inner">
                 <div class="sidebar-user">
-                    <Avatar 
-                        :image="auth.user.avatar || 'https://bootdey.com/img/Content/avatar/avatar7.png'" 
-                        size="large" 
-                        shape="circle"
-                        class="sidebar-avatar"
-                    />
+                    <Avatar :image="auth.user.avatar || 'https://bootdey.com/img/Content/avatar/avatar7.png'"
+                        size="large" shape="circle" class="sidebar-avatar" />
                     <span class="sidebar-name">{{ auth.user.name }}</span>
                 </div>
                 <div class="sidebar-section">CONTENIDO</div>
@@ -63,7 +59,7 @@
                 </div>
             </div>
         </aside>
-        <!---Movile-->
+        <!-- Offcanvas (menú móvil) -->
         <div class="offcanvas offcanvas-end" tabindex="-1" id="menu">
             <div class="offcanvas-header">
                 <h5 class="menu-offcanvas">NEON JACK</h5>
@@ -71,9 +67,44 @@
             </div>
             <div class="offcanvas-body">
                 <ul class="navbar-nav">
-                    <li class="nav-item"><router-link class="nav-link" to="/app">INICIO</router-link></li>
-                    <li class="nav-item"><router-link class="nav-link" to="/app/posts">POSTS</router-link></li>
-                    <li class="nav-item"><router-link class="nav-link" to="/app/profile">MI PERFIL</router-link></li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="/rules">REGLAS</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">INICIO</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="/shop">TIENDA</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="/app/salas">JUGAR</a>
+                    </li>
+                    <li class="nav-item mt-3">
+                        <span class="menu-category">PERFIL</span>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link submenu-link" href="/app/profile">
+                            Perfil
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link submenu-link" href="/app/transacciones">
+                            Transacciones
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link submenu-link" href="/app/skins">
+                            Skins
+                        </a>
+                    </li>
+
                 </ul>
             </div>
         </div>
@@ -97,8 +128,8 @@ const router = useRouter();
 const route = useRoute();
 
 const handleLogout = async () => {
-    await auth.logout(); 
-    router.push('/'); 
+    await auth.logout();
+    router.push('/');
 };
 </script>
 
@@ -142,18 +173,21 @@ const handleLogout = async () => {
 .main-user-content {
     padding-top: 140px;
     padding-bottom: 40px;
-  
+
 }
+
 @media (min-width: 992px) {
     .main-user-content:not(.no-sidebar) {
         padding-left: 300px;
         padding-right: 40px;
     }
+
     .main-user-content.no-sidebar {
         padding-left: 40px;
         padding-right: 40px;
     }
 }
+
 @media (max-width: 991px) {
     .navbar-brand {
         position: absolute;
@@ -164,11 +198,11 @@ const handleLogout = async () => {
 
 /*Sidebar */
 .custom-sidebar {
-   position: absolute;
-    top: 140px;    
-    left: 60px;  
+    position: absolute;
+    top: 140px;
+    left: 60px;
     width: 260px;
-  /*  height: 100%;*/
+    /*  height: 100%;*/
     z-index: 999;
 }
 
@@ -274,11 +308,64 @@ const handleLogout = async () => {
     font-weight: 600;
     color: rgba(255, 255, 255, 0.5);
     letter-spacing: 1.5px;
-    text-transform: uppercase;;
+    text-transform: uppercase;
+    ;
 }
+
 @media (max-width: 991px) {
     .custom-sidebar {
         display: none;
+    }
+}
+
+.navbar-toggler {
+    border: none;
+}
+
+.navbar-toggler-icon {
+    filter: invert(1);
+}
+
+.offcanvas {
+    background: rgba(17, 21, 36, 0.5) !important;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-radius: 7px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+}
+
+.menu-offcanvas {
+    color: white !important;
+}
+
+
+
+.logo img {
+    height: 50px;
+}
+
+.menu-category{
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.4);
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+}
+
+.submenu-link{
+    padding-left: 25px !important;
+    color: white !important;
+    font-size: 0.95rem;
+}
+
+@media (max-width: 991px) {
+    .navbar-brand {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
     }
 }
 </style>

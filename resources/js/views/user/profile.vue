@@ -140,14 +140,30 @@ const onTemplatedUpload = async () => {
 
 <style scoped>
 .profile-container {
-    padding-left: 50px;
-    padding-right: 20px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    box-sizing: border-box;
 }
+
 .perfil-contenedor {
+    width: 100%;
     border-radius: 10px;
     display: flex;
     flex-direction: column;
     gap: 20px;
+}
+
+@media (min-width: 768px) {
+    .profile-container {
+        padding-left: 50px;
+        padding-bottom: 20px;
+        display: block; 
+    }
+    
+    .perfil-contenedor {
+        width: 100%; 
+    }
 }
 
 .datos-card {

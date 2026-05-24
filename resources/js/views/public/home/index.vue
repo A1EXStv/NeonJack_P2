@@ -290,7 +290,7 @@ section {
         margin: 0 auto;
         width: 300px;
         text-align: center;
-        margin-top: 30px;
+        margin-top: 100px;
     }
 
     .titulo-card h1 {
@@ -476,8 +476,8 @@ section {
 }
 
 .section3-iconos {
-    width: 120px;
-    height: 120px;
+    width: 100px;
+    height: 100px;
     fill: #8781C9;
 }
 

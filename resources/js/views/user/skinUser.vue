@@ -113,10 +113,10 @@ onMounted(async () => {
 
 <style scoped>
 .skins-container {
-    min-height: 800px;
-}
-.titulo-skins {
-    justify-content: center;
+    width: 100%;
+    min-height: 115vh;
+    padding: 20px;
+    box-sizing: border-box;
 }
 
 .titulo-skins h2 {
@@ -125,7 +125,6 @@ onMounted(async () => {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     display: inline-block;
-    text-align: center;
 }
 
 .section2Cartas {
@@ -162,12 +161,12 @@ onMounted(async () => {
     height: 100%;
     object-fit: cover;
     border-radius: 15px;
-
 }
 
 .page2 {
     background: white;
     transform: rotateY(180deg);
+    border-radius: 15px; 
 }
 
 .contenido {
@@ -234,5 +233,12 @@ onMounted(async () => {
     color: #9C5CCB;
     font-weight: bold;
     cursor: default;
+}
+
+@media (min-width: 768px) {
+    .skins-container {
+        padding-left: 50px;
+        padding-right: 20px;
+    }
 }
 </style>
