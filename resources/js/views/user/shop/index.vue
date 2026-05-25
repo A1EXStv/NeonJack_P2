@@ -187,10 +187,8 @@ const buySkin = async (skinId, price) => {
 }
 
 .titulo-carta{
-    font-weight: bold;
-    background: linear-gradient(90deg, #9C5CCB, #3BC3DB);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+
+    color:#fff;
     display: inline-block;
     text-align: center;
 }
@@ -231,13 +229,6 @@ const buySkin = async (skinId, price) => {
     color: black;
 }
 
-.titulo-carta {
-    background: linear-gradient(90deg, #9C5CCB, #3BC3DB);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    display: inline-block;
-}
-
 .dado {
     width: 50px;
     height: 50px;
@@ -257,39 +248,19 @@ const buySkin = async (skinId, price) => {
     background: linear-gradient(180deg,#110c22 60%, #7E5290 150%);
     padding-bottom: 60px;
 }  
-/*
+
 @media (max-width: 480px) {
-    .carousel-item .d-flex {
-        flex-direction: column;
-        align-items: center;
-        gap: 0;
+
+
+    .titulo-tienda {
+        width: 80%;
+        margin-left: 20px;
+        margin-top: 60px;
     }
 
-    .carousel-item .img-hover-container {
-        display: none;
-        width: 90%;
-        margin: 0 auto;
-    }
-
-    .carousel-item .img-hover-container:first-child {
-        display: block;
-    }
-
-    .img-fija {
-        height: 200px;
-    }
-
-    .hover-text {
-        top: 70%;
-        font-size: 0.7rem;
-        height: 20%;
-        padding: 5px;
-    }
-
-    .texto-menu {
-        font-size: 0.7rem;
-        line-height: 18px;
+    .titulo-tienda h1 {
+        font-size: 2.5rem;
     }
 }
-*/
+
 </style>

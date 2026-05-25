@@ -14,7 +14,7 @@
       <template #title>
         <div class="flex items-center justify-between w-full">
           <span class="flex items-center gap-2">
-            <i class="pi pi-table text-green-600"></i> Salas de Blackjack
+            <i class="pi pi-table text-white-600"></i> Salas de Blackjack
           </span>
           <div class="flex gap-2">
             <Button
@@ -164,8 +164,11 @@
               :key="n"
               class="flex-1 py-2 rounded-lg border text-sm font-bold transition-all"
               :class="newSala.max_players === n
-                ? 'bg-green-600 border-green-600 text-white'
-                : 'border-surface-300 dark:border-surface-600 hover:border-green-400'"
+                ? 'text-white'
+                : 'border-surface-300 dark:border-surface-600 hover:border-[#818AC8]'"
+              :style="newSala.max_players === n
+                ? 'background: linear-gradient(90deg, #9C5CCB, #818AC8, #3BC3DB); border: none;'
+                : ''"
               @click="newSala.max_players = n"
             >
               {{ n }}
@@ -178,7 +181,7 @@
         <Button
           label="Crear"
           icon="pi pi-check"
-          class="btn-brand"
+          style="color: white; background: linear-gradient(90deg, #9C5CCB, #818AC8, #3BC3DB); border: none;"
           :loading="creating"
           :disabled="!newSala.nombre_sala.trim()"
           @click="createSala"
@@ -314,6 +317,24 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
+
+:deep(.p-inputtext:focus),
+:deep(.p-inputtext.p-focus) {
+    border-color: #818AC8 !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+:deep(.p-password.p-focus),
+:deep(.p-password input:focus) {
+    box-shadow: none !important;
+    border-color: #818AC8 !important;
+}
+
+:deep(.p-inputwrapper-focus) {
+    box-shadow: none !important;
+}
+
 /* ── Card principal ───────────────────────────────── */
 :deep(.p-card) {
   background: #150f2d !important;
@@ -328,6 +349,12 @@ onUnmounted(() => {
 }
 :deep(.p-card-body) {
   padding: 1.25rem !important;
+}
+
+:deep(.btn-brand.p-button) {
+  background: linear-gradient(90deg, #9C5CCB, #818AC8, #3BC3DB) !important;
+  border: none !important;
+  color: #fff !important;
 }
 
 /* ── Cards de sala ────────────────────────────────── */

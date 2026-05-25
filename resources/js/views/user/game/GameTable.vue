@@ -20,7 +20,7 @@
         <!-- HUD -->
         <div class="gt-hud">
           <button class="gt-hud-exit" @click="leaveSala">
-            <i class="pi pi-sign-out" style="font-size:11px"></i> Salir
+            <i class="pi pi-sign-out" style="font-size:11px; color: red;"></i> Salir
           </button>
           <span class="gt-hud-code">{{ salaCode }}</span>
           <div class="gt-hud-wallet">
