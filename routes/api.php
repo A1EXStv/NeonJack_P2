@@ -20,36 +20,38 @@ use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Route as RoutingRoute;
 use Illuminate\Support\Facades\Route;
 
+// ─────────────────────────────────────────────
+// PÚBLICAS — lectura de catálogo y rankings
+// ─────────────────────────────────────────────
+Route::get('category-list', [CategoryController::class, 'getList']);
 
-Route::group(['middleware' => 'auth:sanctum'], function() {
+Route::get('/posts',        [PostController::class, 'index']);
+Route::get('/posts/{post}', [PostController::class, 'show']);
 
-    Route::apiResource('users', UserController::class);
-    Route::post('users/updateimg', [UserController::class,'updateimg']);
+Route::get('/skins',        [SkinController::class, 'index']);
+Route::get('/skins/{skin}', [SkinController::class, 'show']);
 
+Route::get('/logros',        [LogroController::class, 'index']);
+Route::get('/logros/{logro}', [LogroController::class, 'show']);
 
-    Route::apiResource('categories', CategoryController::class);
-    Route::apiResource('roles', RoleController::class);
+Route::get('/ranking',             [RankingController::class, 'index']);
+Route::get('/ranking-beneficio',   [RankingController::class, 'topBeneficio']);
+Route::get('/ranking/top-mano',    [RankingController::class, 'topBeneficioPorMano']);
 
-    Route::get('role-list', [RoleController::class, 'getList']);
-    Route::get('role-permissions/{id}', [PermissionController::class, 'getRolePermissions']);
-    Route::put('/role-permissions', [PermissionController::class, 'updateRolePermissions']);
-    Route::apiResource('permissions', PermissionController::class);
-    
-    Route::get('/user', [ProfileController::class, 'user']);
+// ─────────────────────────────────────────────
+// AUTENTICADO — operaciones propias del jugador
+// ─────────────────────────────────────────────
+Route::middleware('auth:sanctum')->group(function () {
+
+    // Perfil propio
+    Route::get('/user',        [ProfileController::class, 'user']);
     Route::get('/user/signin', [ProfileController::class, 'user']);
-    Route::put('/user', [ProfileController::class, 'update']);
+    Route::put('/user',        [ProfileController::class, 'update']);
 
-    // Transacciones del usuario autenticado
-    Route::get('/mis-transacciones', [TransaccionController::class, 'misTransacciones']);
-
-    // Redsys
-    Route::post('/redsys/create-payment', [RedsysController::class, 'createPayment']);
-
-
-    Route::get('abilities', function(Request $request) {
+    // Permisos del usuario autenticado
+    Route::get('abilities', function (Request $request) {
         return $request->user()->roles()->with('permissions')
             ->get()
             ->pluck('permissions')
@@ -59,94 +61,99 @@ Route::group(['middleware' => 'auth:sanctum'], function() {
             ->values()
             ->toArray();
     });
-});
-Route::get('category-list', [CategoryController::class, 'getList']);
 
+    // Transacciones propias
+    Route::get('/mis-transacciones', [TransaccionController::class, 'misTransacciones']);
 
+    // Redsys — iniciar pago propio
+    Route::post('/redsys/create-payment', [RedsysController::class, 'createPayment']);
 
-Route::apiResource('posts', PostController::class);
+    // Skins del jugador
+    Route::get('/user/skins',              [UserController::class, 'mySkins']);
+    Route::post('/buy-skin',               [UserController::class, 'buy']);
+    Route::post('/skins/{skin}/activate',  [SkinController::class, 'activate']);
 
-// Route::get('/posts', [PostController::class, 'index']);
-// Route::get('/posts/{post}', [PostController::class, 'show']);
-// Route::delete('/posts/{post}', [PostController::class, 'destroy']);
-// Route::post('/posts/{post}', [PostController::class, 'store']);
-
-
-Route::get('/transacciones', [TransaccionController::class, 'index']);
-Route::get('/transacciones/{transaccion}', [TransaccionController::class, 'show']);
-Route::delete('/transacciones/{transaccion}', [TransaccionController::class, 'destroy']);
-Route::post('/transacciones', [TransaccionController::class, 'store']);
-
-// Route::apiResource('transacciones', TransaccionController::class);
-Route::post('/skins', [SkinController::class, 'store']);
-Route::get('/skins', [SkinController::class, 'index']);
-Route::get('/skins/{skin}', [SkinController::class, 'show']);
-Route::delete('/skins/{skin}', [SkinController::class, 'destroy']);
-Route::put('/skins/{skin}', [SkinController::class, 'update']);
-Route::post('/skins/updateimg', [SkinController::class, 'updateimg']);
-Route::middleware('auth:sanctum')->post('/buy-skin', [UserController::class, 'buy']);
-// SKINS — activar skin (requiere auth)
-Route::middleware('auth:sanctum')->get('/user/skins', [UserController::class, 'mySkins']);
-Route::middleware('auth:sanctum')->post('/skins/{skin}/activate', [SkinController::class, 'activate']);
-
-// LOGROS
-Route::get('/logros', [LogroController::class, 'index']);
-Route::get('/logros/{logro}', [LogroController::class, 'show']);
-Route::delete('/logros/{logro}', [LogroController::class, 'destroy']);
-Route::post('/logros', [LogroController::class, 'store']);
-Route::post('/logros/{logro}', [LogroController::class, 'update']);
-
-//LOGS
-
-Route::get('/logs', [LogController::class, 'index']);
-Route::get('/logs/{log}', [LogController::class, 'show']);
-Route::delete('/logs/{log}', [LogController::class, 'destroy']);
-Route::post('/logs', [LogController::class, 'store']);
- 
-// SALAS (requieren auth — Auth::user() debe estar disponible)
-Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/salas', [SalaController::class, 'index']);
-    Route::post('/salas', [SalaController::class, 'store']);
-    Route::get('/salas/{sala}', [SalaController::class, 'show']);
-    Route::post('/salas/{sala}', [SalaController::class, 'update']);
-    Route::delete('/salas/{sala}', [SalaController::class, 'destroy']);
-    Route::post('/salas/{sala}/join', [SalaController::class, 'join']);
+    // Salas y partidas de Blackjack
+    Route::get('/salas',             [SalaController::class, 'index']);
+    Route::post('/salas',            [SalaController::class, 'store']);
+    Route::get('/salas/{sala}',      [SalaController::class, 'show']);
+    Route::post('/salas/{sala}',     [SalaController::class, 'update']);
+    Route::delete('/salas/{sala}',   [SalaController::class, 'destroy']);
+    Route::post('/salas/{sala}/join',  [SalaController::class, 'join']);
     Route::delete('/salas/{sala}/leave', [SalaController::class, 'leave']);
 
-    // BLACKJACK
-    Route::post('/salas/{sala}/iniciar', [BlackjackController::class, 'iniciar']);
+    Route::post('/salas/{sala}/iniciar',     [BlackjackController::class, 'iniciar']);
     Route::get('/partidas/{partida}/estado', [BlackjackController::class, 'estado']);
     Route::post('/partidas/{partida}/apostar', [BlackjackController::class, 'apostar']);
-    Route::post('/partidas/{partida}/hit', [BlackjackController::class, 'hit']);
-    Route::post('/partidas/{partida}/stand', [BlackjackController::class, 'stand']);
-    Route::post('/partidas/{partida}/doblar', [BlackjackController::class, 'doblar']);
+    Route::post('/partidas/{partida}/hit',     [BlackjackController::class, 'hit']);
+    Route::post('/partidas/{partida}/stand',   [BlackjackController::class, 'stand']);
+    Route::post('/partidas/{partida}/doblar',  [BlackjackController::class, 'doblar']);
     Route::post('/partidas/{partida}/dividir', [BlackjackController::class, 'dividir']);
 });
 
-//MANOS
-Route::get('/manos', [ManoController::class, 'index']);
-Route::get('/manos/{mano}', [ManoController::class, 'show']);
-Route::delete('/manos/{mano}', [ManoController::class, 'destroy']);
-Route::post('/manos', [ManoController::class, 'store']);
-// Route::post('/manos/{mano}', [ManoController::class, 'update']);
+// ─────────────────────────────────────────────
+// ADMIN — gestión del sistema (auth + role:admin)
+// ─────────────────────────────────────────────
+Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
 
-//AJUSTES
-Route::get('/ajustes', [AjustesController::class, 'index']);
-Route::get('/ajustes/{ajuste}', [AjustesController::class, 'show']);
-Route::delete('/ajustes/{ajuste}', [AjustesController::class, 'destroy']);
-Route::post('/ajustes', [AjustesController::class, 'store']);
-Route::post('/ajustes/{ajuste}', [AjustesController::class, 'update']);
+    // Usuarios
+    Route::apiResource('users', UserController::class);
+    Route::post('users/updateimg', [UserController::class, 'updateimg']);
 
-//CARTERA
-Route::get('/carteras', [CarteraController::class, 'index']);
-Route::get('/carteras/{cartera}', [CarteraController::class, 'show']);
-Route::delete('/carteras/{cartera}', [CarteraController::class, 'destroy']);
-Route::post('/carteras', [CarteraController::class, 'store']);
-// Route::post('/carteras/{cartera}', [CarteraController::class, 'update']);
+    // Categorías
+    Route::apiResource('categories', CategoryController::class);
 
+    // Roles y permisos
+    Route::apiResource('roles', RoleController::class);
+    Route::get('role-list',                  [RoleController::class, 'getList']);
+    Route::get('role-permissions/{id}',      [PermissionController::class, 'getRolePermissions']);
+    Route::put('/role-permissions',          [PermissionController::class, 'updateRolePermissions']);
+    Route::apiResource('permissions', PermissionController::class);
 
+    // Posts (escritura)
+    Route::post('/posts',         [PostController::class, 'store']);
+    Route::put('/posts/{post}',   [PostController::class, 'update']);
+    Route::delete('/posts/{post}', [PostController::class, 'destroy']);
 
-//RANKING
-Route::get('/ranking', [RankingController::class, 'index']);
-Route::get('/ranking-beneficio', [RankingController::class, 'topBeneficio']);
-Route::get('/ranking/top-mano', [RankingController::class, 'topBeneficioPorMano']);
+    // Transacciones (vista y gestión completa)
+    Route::get('/transacciones',                    [TransaccionController::class, 'index']);
+    Route::get('/transacciones/{transaccion}',      [TransaccionController::class, 'show']);
+    Route::post('/transacciones',                   [TransaccionController::class, 'store']);
+    Route::delete('/transacciones/{transaccion}',   [TransaccionController::class, 'destroy']);
+
+    // Skins (gestión del catálogo)
+    Route::post('/skins',               [SkinController::class, 'store']);
+    Route::put('/skins/{skin}',         [SkinController::class, 'update']);
+    Route::delete('/skins/{skin}',      [SkinController::class, 'destroy']);
+    Route::post('/skins/updateimg',     [SkinController::class, 'updateimg']);
+
+    // Logros (gestión)
+    Route::post('/logros',              [LogroController::class, 'store']);
+    Route::post('/logros/{logro}',      [LogroController::class, 'update']);
+    Route::delete('/logros/{logro}',    [LogroController::class, 'destroy']);
+
+    // Logs (solo admin puede leer/borrar logs del sistema)
+    Route::get('/logs',          [LogController::class, 'index']);
+    Route::get('/logs/{log}',    [LogController::class, 'show']);
+    Route::post('/logs',         [LogController::class, 'store']);
+    Route::delete('/logs/{log}', [LogController::class, 'destroy']);
+
+    // Manos (historial de partidas)
+    Route::get('/manos',          [ManoController::class, 'index']);
+    Route::get('/manos/{mano}',   [ManoController::class, 'show']);
+    Route::post('/manos',         [ManoController::class, 'store']);
+    Route::delete('/manos/{mano}', [ManoController::class, 'destroy']);
+
+    // Ajustes del sistema
+    Route::get('/ajustes',              [AjustesController::class, 'index']);
+    Route::get('/ajustes/{ajuste}',     [AjustesController::class, 'show']);
+    Route::post('/ajustes',             [AjustesController::class, 'store']);
+    Route::post('/ajustes/{ajuste}',    [AjustesController::class, 'update']);
+    Route::delete('/ajustes/{ajuste}',  [AjustesController::class, 'destroy']);
+
+    // Carteras (movimientos financieros)
+    Route::get('/carteras',             [CarteraController::class, 'index']);
+    Route::get('/carteras/{cartera}',   [CarteraController::class, 'show']);
+    Route::post('/carteras',            [CarteraController::class, 'store']);
+    Route::delete('/carteras/{cartera}', [CarteraController::class, 'destroy']);
+});
